@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/Toast'
 import SpecLevel from '@/components/ui/SpecLevel'
+import { createClient } from '@/lib/supabase/client'
 
 function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
@@ -72,6 +74,22 @@ function SettingRow({
 
 export default function ProfilePage() {
   const { showToast } = useToast()
+  const router = useRouter()
+  const [userInfo, setUserInfo] = useState({ name: '로딩중...', email: '', dept: '', studentId: '' })
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setUserInfo({
+          name: data.user.user_metadata?.name || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || '사용자',
+          email: data.user.email || '',
+          dept: data.user.user_metadata?.dept || '미설정',
+          studentId: data.user.user_metadata?.student_id || '미설정',
+        })
+      }
+    })
+  }, [])
 
   // Notification toggles
   const [scheduleNotif, setScheduleNotif] = useState(true)
@@ -102,8 +120,11 @@ export default function ProfilePage() {
     showToast('프로필 수정 페이지로 이동합니다')
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
     showToast('로그아웃 되었습니다')
+    router.push('/')
   }
 
   const handleDeleteAccount = () => {
@@ -207,10 +228,10 @@ export default function ProfilePage() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {[
-                { label: '이름', value: '김민준' },
-                { label: '학과', value: '컴퓨터공학과' },
-                { label: '학번', value: '20231234' },
-                { label: '이메일', value: 'minjun@univ.ac.kr' },
+                { label: '이름', value: userInfo.name },
+                { label: '학과', value: userInfo.dept },
+                { label: '학번', value: userInfo.studentId },
+                { label: '이메일', value: userInfo.email },
               ].map((item) => (
                 <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: 13, color: 'var(--tx3)' }}>{item.label}</span>

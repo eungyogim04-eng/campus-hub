@@ -9,14 +9,15 @@ import MobileTopbar from '@/components/layout/MobileTopbar'
 import GlobalSearch from '@/components/ui/GlobalSearch'
 import PageTransition from '@/components/ui/PageTransition'
 import { Profile } from '@/types'
+import { createClient } from '@/lib/supabase/client'
 
 const KeyboardShortcuts = dynamic(() => import('@/components/ui/KeyboardShortcuts'), { ssr: false })
 const OnboardingTour = dynamic(() => import('@/components/ui/OnboardingTour'), { ssr: false })
 
 const DEMO_PROFILE: Profile = {
   id: 'demo',
-  name: '김민준',
-  department: '공학·IT',
+  name: '사용자',
+  department: '',
   avatar_url: null,
   onboarded: true,
   created_at: new Date().toISOString(),
@@ -25,11 +26,27 @@ const DEMO_PROFILE: Profile = {
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
+  const [profile, setProfile] = useState<Profile>(DEMO_PROFILE)
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024)
     check()
     window.addEventListener('resize', check)
+
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setProfile({
+          id: data.user.id,
+          name: data.user.user_metadata?.name || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || '사용자',
+          department: data.user.user_metadata?.dept || '',
+          avatar_url: data.user.user_metadata?.avatar_url || null,
+          onboarded: true,
+          created_at: data.user.created_at,
+        })
+      }
+    })
+
     return () => window.removeEventListener('resize', check)
   }, [])
 
@@ -45,7 +62,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <MobileTopbar onMenuClick={() => setMobileOpen(!mobileOpen)} />
         )}
         <Sidebar
-          profile={DEMO_PROFILE}
+          profile={profile}
           mobileOpen={mobileOpen}
           onClose={() => setMobileOpen(false)}
           isDesktop={isDesktop}

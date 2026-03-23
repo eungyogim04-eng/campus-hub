@@ -6,6 +6,7 @@ import Link from 'next/link'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import SemesterDday from '@/components/ui/SemesterDday'
 import SpecLevel from '@/components/ui/SpecLevel'
+import { createClient } from '@/lib/supabase/client'
 
 function daysLeft(ds: string | null): number | null {
   if (!ds) return null
@@ -80,11 +81,20 @@ function MiniCalendar() {
 
 export default function DashboardPage() {
   const [todayStr, setTodayStr] = useState('')
+  const [userName, setUserName] = useState('사용자')
 
   useEffect(() => {
     const d = new Date()
     const days = ['일', '월', '화', '수', '목', '금', '토']
     setTodayStr(`${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 (${days[d.getDay()]})`)
+
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        const name = data.user.user_metadata?.name || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || '사용자'
+        setUserName(name)
+      }
+    })
   }, [])
 
   return (
@@ -93,7 +103,7 @@ export default function DashboardPage() {
       <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <div style={{ fontSize: 20, fontWeight: 700 }}>안녕하세요, 김민준님 👋</div>
+            <div style={{ fontSize: 20, fontWeight: 700 }}>안녕하세요, {userName}님 👋</div>
             <SpecLevel compact />
           </div>
           <div style={{ fontSize: 13, color: 'var(--tx3)', marginTop: 2 }}>오늘도 알찬 하루 보내세요!</div>
