@@ -31,10 +31,8 @@ export default function ReviewPage() {
     }
 
     const { data } = await supabase.from('reviews').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
-    if (data && data.length > 0) {
+    if (data) {
       setReviews(data)
-    } else {
-      setReviews(DEMO_REVIEWS as any)
     }
   }
 

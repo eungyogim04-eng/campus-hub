@@ -57,10 +57,8 @@ export default function SchedulePage() {
     }
 
     const { data } = await supabase.from('schedules').select('*').eq('user_id', user.id).order('date', { ascending: true })
-    if (data && data.length > 0) {
+    if (data) {
       setSchedules(data)
-    } else {
-      setSchedules(DEMO_SCHEDULES as any)
     }
   }
 

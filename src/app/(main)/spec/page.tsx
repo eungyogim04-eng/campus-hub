@@ -27,10 +27,8 @@ export default function SpecPage() {
       }
 
       const { data } = await supabase.from('schedules').select('*').eq('user_id', user.id).order('date', { ascending: true })
-      if (data && data.length > 0) {
+      if (data) {
         setSchedules(data)
-      } else {
-        setSchedules(DEMO_SPECS as any)
       }
     }
     load()

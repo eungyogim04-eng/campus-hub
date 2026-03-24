@@ -115,17 +115,19 @@ export default function DashboardPage() {
 
         // Fetch schedules count
         const { data: schedules } = await supabase.from('schedules').select('id').eq('user_id', user.id)
-        if (schedules && schedules.length > 0) {
+        if (schedules) {
           setScheduleCount(schedules.length)
         }
 
         // Fetch grades for GPA calculation
         const { data: grades } = await supabase.from('grades').select('grade, credits').eq('user_id', user.id)
-        if (grades && grades.length > 0) {
+        if (grades) {
           const totalCredits = grades.reduce((s: number, g: any) => s + g.credits, 0)
           const weightedSum = grades.reduce((s: number, g: any) => s + g.grade * g.credits, 0)
           if (totalCredits > 0) {
             setAvgGpa((weightedSum / totalCredits).toFixed(2))
+          } else {
+            setAvgGpa('0.00')
           }
         }
       }

@@ -42,10 +42,8 @@ export default function GradePage() {
     }
 
     const { data } = await supabase.from('grades').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
-    if (data && data.length > 0) {
+    if (data) {
       setGrades(data)
-    } else {
-      setGrades(DEMO_GRADES as any)
     }
   }
 
