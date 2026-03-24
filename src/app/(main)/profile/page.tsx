@@ -75,20 +75,55 @@ function SettingRow({
 export default function ProfilePage() {
   const { showToast } = useToast()
   const router = useRouter()
+  const supabase = createClient()
+  const [userId, setUserId] = useState<string | null>(null)
   const [userInfo, setUserInfo] = useState({ name: '로딩중...', email: '', dept: '', studentId: '' })
+  const [editMode, setEditMode] = useState(false)
+  const [editForm, setEditForm] = useState({ name: '', dept: '', studentId: '' })
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
+    const loadProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        // Demo mode
+        setUserInfo({ name: '데모 사용자', email: 'demo@campus-hub.kr', dept: '컴퓨터공학과', studentId: '20230001' })
+        return
+      }
+
+      setUserId(user.id)
+
+      // Fetch from profiles table
+      const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+
+      if (profile) {
         setUserInfo({
-          name: data.user.user_metadata?.name || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || '사용자',
-          email: data.user.email || '',
-          dept: data.user.user_metadata?.dept || '미설정',
-          studentId: data.user.user_metadata?.student_id || '미설정',
+          name: profile.name || user.user_metadata?.name || user.email?.split('@')[0] || '사용자',
+          email: user.email || '',
+          dept: profile.department || user.user_metadata?.dept || '미설정',
+          studentId: profile.student_id || user.user_metadata?.student_id || '미설정',
+        })
+        setEditForm({
+          name: profile.name || '',
+          dept: profile.department || '',
+          studentId: profile.student_id || '',
+        })
+      } else {
+        setUserInfo({
+          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || '사용자',
+          email: user.email || '',
+          dept: user.user_metadata?.dept || '미설정',
+          studentId: user.user_metadata?.student_id || '미설정',
+        })
+        setEditForm({
+          name: user.user_metadata?.name || user.email?.split('@')[0] || '',
+          dept: user.user_metadata?.dept || '',
+          studentId: user.user_metadata?.student_id || '',
         })
       }
-    })
+    }
+
+    loadProfile()
   }, [])
 
   // Notification toggles
@@ -116,12 +151,34 @@ export default function ProfilePage() {
     localStorage.setItem('darkMode', String(next))
   }
 
-  const handleEditProfile = () => {
-    showToast('프로필 수정 페이지로 이동합니다')
+  const handleSaveProfile = async () => {
+    if (!userId) {
+      showToast('로그인이 필요합니다')
+      return
+    }
+
+    const { error } = await supabase.from('profiles').upsert({
+      id: userId,
+      name: editForm.name.trim(),
+      department: editForm.dept.trim(),
+      student_id: editForm.studentId.trim(),
+    })
+
+    if (error) {
+      showToast('저장 실패: ' + error.message)
+    } else {
+      setUserInfo(prev => ({
+        ...prev,
+        name: editForm.name.trim() || prev.name,
+        dept: editForm.dept.trim() || prev.dept,
+        studentId: editForm.studentId.trim() || prev.studentId,
+      }))
+      setEditMode(false)
+      showToast('프로필이 저장되었습니다!')
+    }
   }
 
   const handleLogout = async () => {
-    const supabase = createClient()
     await supabase.auth.signOut()
     showToast('로그아웃 되었습니다')
     router.push('/')
@@ -226,26 +283,49 @@ export default function ProfilePage() {
             <div className="text-[15px] font-semibold mb-3" style={{ color: 'var(--txt)' }}>
               👤 계정 정보
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {[
-                { label: '이름', value: userInfo.name },
-                { label: '학과', value: userInfo.dept },
-                { label: '학번', value: userInfo.studentId },
-                { label: '이메일', value: userInfo.email },
-              ].map((item) => (
-                <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 13, color: 'var(--tx3)' }}>{item.label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--txt)' }}>{item.value}</span>
+            {editMode ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div className="form-group">
+                  <label className="form-label">이름</label>
+                  <input className="form-input" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} placeholder="이름" />
                 </div>
-              ))}
-            </div>
-            <button
-              className="btn"
-              style={{ width: '100%', marginTop: 16 }}
-              onClick={handleEditProfile}
-            >
-              계정 정보 수정
-            </button>
+                <div className="form-group">
+                  <label className="form-label">학과</label>
+                  <input className="form-input" value={editForm.dept} onChange={e => setEditForm({ ...editForm, dept: e.target.value })} placeholder="학과" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">학번</label>
+                  <input className="form-input" value={editForm.studentId} onChange={e => setEditForm({ ...editForm, studentId: e.target.value })} placeholder="학번" />
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button className="btn-ghost" style={{ flex: 1 }} onClick={() => setEditMode(false)}>취소</button>
+                  <button className="btn" style={{ flex: 1 }} onClick={handleSaveProfile}>저장하기</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {[
+                    { label: '이름', value: userInfo.name },
+                    { label: '학과', value: userInfo.dept },
+                    { label: '학번', value: userInfo.studentId },
+                    { label: '이메일', value: userInfo.email },
+                  ].map((item) => (
+                    <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: 13, color: 'var(--tx3)' }}>{item.label}</span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--txt)' }}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className="btn"
+                  style={{ width: '100%', marginTop: 16 }}
+                  onClick={() => setEditMode(true)}
+                >
+                  계정 정보 수정
+                </button>
+              </>
+            )}
           </div>
 
           {/* App Info */}

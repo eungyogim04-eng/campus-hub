@@ -16,7 +16,26 @@ const DEMO_SPECS = [
 export default function SpecPage() {
   const supabase = createClient()
   const [schedules, setSchedules] = useState<SavedSchedule[]>([])
-  useEffect(() => { const load = async () => { const{data}=await supabase.from('schedules').select('*').order('date',{ascending:true}); if(data) setSchedules(data); if (!data || data.length === 0) setSchedules(DEMO_SPECS as any) }; load() }, [])
+
+  useEffect(() => {
+    const load = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        setSchedules(DEMO_SPECS as any)
+        return
+      }
+
+      const { data } = await supabase.from('schedules').select('*').eq('user_id', user.id).order('date', { ascending: true })
+      if (data && data.length > 0) {
+        setSchedules(data)
+      } else {
+        setSchedules(DEMO_SPECS as any)
+      }
+    }
+    load()
+  }, [])
+
   const upcoming = schedules.filter(s=>{const d=daysLeft(s.date);return d!==null&&d>=0})
   const thisMonth = upcoming.filter(s=>{const d=daysLeft(s.date);return d!==null&&d<=30})
   return (

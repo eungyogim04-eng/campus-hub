@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/Toast'
 import Modal from '@/components/ui/Modal'
@@ -36,6 +36,7 @@ export default function SchedulePage() {
   const [cevMemo, setCevMemo] = useState('')
   const [calYear, setCalYear] = useState(new Date().getFullYear())
   const [calMonth, setCalMonth] = useState(new Date().getMonth())
+  const userRef = useRef<string | null>(null)
 
   useEffect(() => { loadSchedules() }, [])
 
@@ -47,12 +48,24 @@ export default function SchedulePage() {
   ]
 
   const loadSchedules = async () => {
-    const { data } = await supabase.from('schedules').select('*').order('date', { ascending: true })
-    if (data) setSchedules(data)
-    if (!data || data.length === 0) setSchedules(DEMO_SCHEDULES as any)
+    const { data: { user } } = await supabase.auth.getUser()
+    userRef.current = user?.id ?? null
+
+    if (!user) {
+      setSchedules(DEMO_SCHEDULES as any)
+      return
+    }
+
+    const { data } = await supabase.from('schedules').select('*').eq('user_id', user.id).order('date', { ascending: true })
+    if (data && data.length > 0) {
+      setSchedules(data)
+    } else {
+      setSchedules(DEMO_SCHEDULES as any)
+    }
   }
 
   const removeSchedule = async (id: string) => {
+    if (id.startsWith('d') && id.length <= 3) { setSchedules(prev => prev.filter(s => s.id !== id)); return }
     await supabase.from('schedules').delete().eq('id', id)
     setSchedules(prev => prev.filter(s => s.id !== id))
   }
@@ -73,14 +86,16 @@ export default function SchedulePage() {
       desc: cevMemo || meta.label + ' 일정',
       benefit: '',
     }
-    await supabase.from('schedules').insert({
+    const insertData: any = {
       item_id: customItem.id,
       item_data: customItem,
       date: cevDate,
       memo: cevMemo,
       alert_days: 7,
       dept: meta.label,
-    })
+    }
+    if (userRef.current) insertData.user_id = userRef.current
+    await supabase.from('schedules').insert(insertData)
     setModalOpen(false)
     setCevTitle(''); setCevOrg(''); setCevMemo('')
     loadSchedules()

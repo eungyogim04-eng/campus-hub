@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/Toast'
 import Modal from '@/components/ui/Modal'
@@ -11,6 +11,7 @@ export default function ReviewPage() {
   const supabase = createClient(); const { showToast } = useToast()
   const [reviews, setReviews] = useState<Review[]>([]); const [filter, setFilter] = useState('all'); const [modalOpen, setModalOpen] = useState(false)
   const [form, setForm] = useState({title:'',org:'',result:'pass',date:'',category:'contest',body:''})
+  const userRef = useRef<string | null>(null)
 
   const DEMO_REVIEWS = [
     { id: 'd1', title: '삼성 마케팅 공모전', org: '삼성전자', result: 'pass' as const, date: '2026-02-15', category: 'contest', body: '3개월 준비해서 은상 수상. 마케팅 전략 수립 경험이 많이 도움됐음. PPT 디자인도 중요하다는 걸 깨달음.', created_at: '2026-02-15' },
@@ -19,9 +20,37 @@ export default function ReviewPage() {
   ]
 
   useEffect(() => { loadReviews() }, [])
-  const loadReviews = async () => { const { data } = await supabase.from('reviews').select('*').order('created_at',{ascending:false}); if(data) setReviews(data); if (!data || data.length === 0) setReviews(DEMO_REVIEWS as any) }
-  const addReview = async () => { if(!form.title.trim()){showToast('⚠️ 활동명을 입력해주세요');return}; await supabase.from('reviews').insert({title:form.title.trim(),org:form.org.trim(),result:form.result,date:form.date||null,category:form.category,body:form.body.trim()}); setModalOpen(false); setForm({title:'',org:'',result:'pass',date:'',category:'contest',body:''}); loadReviews(); showToast('✍️ 후기 저장 완료!') }
-  const deleteReview = async (id: string) => { await supabase.from('reviews').delete().eq('id',id); setReviews(p=>p.filter(r=>r.id!==id)) }
+
+  const loadReviews = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    userRef.current = user?.id ?? null
+
+    if (!user) {
+      setReviews(DEMO_REVIEWS as any)
+      return
+    }
+
+    const { data } = await supabase.from('reviews').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+    if (data && data.length > 0) {
+      setReviews(data)
+    } else {
+      setReviews(DEMO_REVIEWS as any)
+    }
+  }
+
+  const addReview = async () => {
+    if(!form.title.trim()){showToast('⚠️ 활동명을 입력해주세요');return}
+    const insertData: any = {title:form.title.trim(),org:form.org.trim(),result:form.result,date:form.date||null,category:form.category,body:form.body.trim()}
+    if (userRef.current) insertData.user_id = userRef.current
+    await supabase.from('reviews').insert(insertData)
+    setModalOpen(false); setForm({title:'',org:'',result:'pass',date:'',category:'contest',body:''}); loadReviews(); showToast('✍️ 후기 저장 완료!')
+  }
+
+  const deleteReview = async (id: string) => {
+    if (id.startsWith('d') && id.length <= 3) { setReviews(p=>p.filter(r=>r.id!==id)); return }
+    await supabase.from('reviews').delete().eq('id',id); setReviews(p=>p.filter(r=>r.id!==id))
+  }
+
   const list = filter==='all'?reviews:reviews.filter(r=>r.result===filter); const passCount = reviews.filter(r=>r.result==='pass').length
   return (
     <div>

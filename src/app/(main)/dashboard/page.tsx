@@ -22,6 +22,14 @@ const DEMO_SCHEDULES = [
   { id: '3', item_data: { type: 'activity', title: '네이버 부스트캠프', org: '네이버 커넥트재단', icon: '🚀' }, date: '2026-05-15', dept: '공학·IT' },
 ]
 
+const DEMO_GRADES = [
+  { id: 'dg1', grade: 4.5, credits: 3 },
+  { id: 'dg2', grade: 4.0, credits: 3 },
+  { id: 'dg3', grade: 3.5, credits: 3 },
+  { id: 'dg4', grade: 4.5, credits: 2 },
+  { id: 'dg5', grade: 4.0, credits: 3 },
+]
+
 const TODAY_EVENTS = [
   { title: '컴퓨터구조론 강의', time: '09:00', place: '공학관 301호', tag: '수업', tagColor: '#2D8A56' },
   { title: '알고리즘 과제 제출', time: '23:59', place: '온라인 제출', tag: '과제', tagColor: '#E8913A' },
@@ -82,6 +90,8 @@ function MiniCalendar() {
 export default function DashboardPage() {
   const [todayStr, setTodayStr] = useState('')
   const [userName, setUserName] = useState('사용자')
+  const [scheduleCount, setScheduleCount] = useState(DEMO_SCHEDULES.length)
+  const [avgGpa, setAvgGpa] = useState('3.90')
 
   useEffect(() => {
     const d = new Date()
@@ -89,12 +99,39 @@ export default function DashboardPage() {
     setTodayStr(`${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 (${days[d.getDay()]})`)
 
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        const name = data.user.user_metadata?.name || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || '사용자'
-        setUserName(name)
+
+    const loadData = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        // Fetch profile name
+        const { data: profile } = await supabase.from('profiles').select('name').eq('id', user.id).single()
+        if (profile?.name) {
+          setUserName(profile.name)
+        } else {
+          const name = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || '사용자'
+          setUserName(name)
+        }
+
+        // Fetch schedules count
+        const { data: schedules } = await supabase.from('schedules').select('id').eq('user_id', user.id)
+        if (schedules && schedules.length > 0) {
+          setScheduleCount(schedules.length)
+        }
+
+        // Fetch grades for GPA calculation
+        const { data: grades } = await supabase.from('grades').select('grade, credits').eq('user_id', user.id)
+        if (grades && grades.length > 0) {
+          const totalCredits = grades.reduce((s: number, g: any) => s + g.credits, 0)
+          const weightedSum = grades.reduce((s: number, g: any) => s + g.grade * g.credits, 0)
+          if (totalCredits > 0) {
+            setAvgGpa((weightedSum / totalCredits).toFixed(2))
+          }
+        }
       }
-    })
+    }
+
+    loadData()
   }, [])
 
   return (
@@ -148,8 +185,8 @@ export default function DashboardPage() {
       {/* Row 2: Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
         <div className="stat-card"><div className="stat-label">총 장학금</div><div className="stat-val" style={{ color: 'var(--t)' }}>975<span className="text-[13px] font-normal">만원</span></div></div>
-        <div className="stat-card"><div className="stat-label">저장된 일정</div><div className="stat-val">{DEMO_SCHEDULES.length}</div></div>
-        <div className="stat-card"><div className="stat-label">평균 학점</div><div className="stat-val" style={{ color: 'var(--p)' }}>3.90</div></div>
+        <div className="stat-card"><div className="stat-label">저장된 일정</div><div className="stat-val">{scheduleCount}</div></div>
+        <div className="stat-card"><div className="stat-label">평균 학점</div><div className="stat-val" style={{ color: 'var(--p)' }}>{avgGpa}</div></div>
         <div className="stat-card"><div className="stat-label">보유 자격증</div><div className="stat-val">6<span className="text-[13px] font-normal">건</span></div></div>
       </div>
 

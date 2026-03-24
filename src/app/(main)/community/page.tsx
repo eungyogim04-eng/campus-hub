@@ -40,17 +40,22 @@ export default function CommunityPage() {
       .order('created_at', { ascending: false })
     if (filter !== 'all') query = query.eq('category', filter)
     const { data } = await query
-    if (data) setPosts(data)
-    if (!data || data.length === 0) setPosts(DEMO_POSTS as any)
+    if (data && data.length > 0) {
+      setPosts(data)
+    } else {
+      setPosts(DEMO_POSTS as any)
+    }
   }
 
   const createPost = async () => {
     if (!form.title.trim() || !form.body.trim()) { showToast('⚠️ 제목과 내용을 입력해주세요'); return }
     const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean)
-    await supabase.from('posts').insert({
+    const insertData: any = {
       title: form.title.trim(), body: form.body.trim(),
       category: form.category, tags,
-    })
+    }
+    if (user) insertData.user_id = user.id
+    await supabase.from('posts').insert(insertData)
     setModalOpen(false)
     setForm({ title: '', body: '', category: 'free', tags: '' })
     loadPosts()

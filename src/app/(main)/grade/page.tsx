@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/Toast'
 import Modal from '@/components/ui/Modal'
@@ -28,19 +28,39 @@ export default function GradePage() {
   const [remainSemesters, setRemainSemesters] = useState('3')
   const [gradReq, setGradReq] = useState({ total: '130', major: '60', liberal: '30', doubleMajor: '0', minor: '0' })
   const [form, setForm] = useState({ subject: '', grade: '4.5', credits: '3', semester: '2026-1', type: '전공필수' })
+  const userRef = useRef<string | null>(null)
 
   useEffect(() => { loadGrades() }, [])
+
   const loadGrades = async () => {
-    const { data } = await supabase.from('grades').select('*').order('created_at', { ascending: false })
-    if (data) setGrades(data)
-    if (!data || data.length === 0) setGrades(DEMO_GRADES as any)
+    const { data: { user } } = await supabase.auth.getUser()
+    userRef.current = user?.id ?? null
+
+    if (!user) {
+      setGrades(DEMO_GRADES as any)
+      return
+    }
+
+    const { data } = await supabase.from('grades').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+    if (data && data.length > 0) {
+      setGrades(data)
+    } else {
+      setGrades(DEMO_GRADES as any)
+    }
   }
+
   const addGrade = async () => {
     if (!form.subject.trim()) { showToast('⚠️ 과목명을 입력해주세요'); return }
-    await supabase.from('grades').insert({ subject: form.subject.trim(), grade: parseFloat(form.grade), credits: parseInt(form.credits), semester: form.semester, type: form.type })
+    const insertData: any = { subject: form.subject.trim(), grade: parseFloat(form.grade), credits: parseInt(form.credits), semester: form.semester, type: form.type }
+    if (userRef.current) insertData.user_id = userRef.current
+    await supabase.from('grades').insert(insertData)
     setModalOpen(false); setForm({ subject: '', grade: '4.5', credits: '3', semester: '2026-1', type: '전공필수' }); loadGrades(); showToast(`📝 ${form.subject} 성적 추가!`)
   }
-  const deleteGrade = async (id: string) => { await supabase.from('grades').delete().eq('id', id); setGrades(prev => prev.filter(g => g.id !== id)) }
+
+  const deleteGrade = async (id: string) => {
+    if (id.startsWith('dg')) { setGrades(prev => prev.filter(g => g.id !== id)); return }
+    await supabase.from('grades').delete().eq('id', id); setGrades(prev => prev.filter(g => g.id !== id))
+  }
 
   const filtered = semFilter === 'all' ? grades : grades.filter(g => g.semester === semFilter)
   const counted = filtered.filter(g => g.grade >= 0)
