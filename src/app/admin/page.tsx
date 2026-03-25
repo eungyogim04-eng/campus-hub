@@ -80,6 +80,10 @@ export default function AdminPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<ItemFormData>(emptyForm)
 
+  /* ── URL scrape state ── */
+  const [scrapeUrl, setScrapeUrl] = useState('')
+  const [scraping, setScraping] = useState(false)
+
   const filteredItems = useMemo(() => {
     return allItems.filter(item => {
       if (typeFilter !== 'all' && item.type !== typeFilter) return false
@@ -97,6 +101,41 @@ export default function AdminPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>(defaultAnnouncements)
   const [noticeModalOpen, setNoticeModalOpen] = useState(false)
   const [noticeForm, setNoticeForm] = useState({ title: '', content: '', pinned: false })
+
+  /* ── Scrape handler ── */
+  const handleScrape = async () => {
+    if (!scrapeUrl.trim()) { showToast('URL을 입력해주세요'); return }
+    setScraping(true)
+    try {
+      const res = await fetch('/api/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: scrapeUrl.trim() }),
+      })
+      const data = await res.json()
+      if (data.error) { showToast('❌ ' + data.error); return }
+
+      setEditingId(null)
+      setForm({
+        type: data.type || 'contest',
+        title: data.title || '',
+        org: data.org || '',
+        desc: data.description || '',
+        benefit: data.benefit || '',
+        deadline: data.deadline || '',
+        icon: data.icon || '🏆',
+        diff: data.diff || '보통',
+        url: data.url || scrapeUrl,
+      })
+      setModalOpen(true)
+      setScrapeUrl('')
+      showToast('✅ 정보가 자동으로 추출되었습니다. 확인 후 저장하세요!')
+    } catch {
+      showToast('❌ URL을 불러오지 못했습니다')
+    } finally {
+      setScraping(false)
+    }
+  }
 
   /* ── Handlers ── */
   const openAddModal = () => {
@@ -257,6 +296,25 @@ export default function AdminPage() {
       {/* Tab 1: Content management */}
       {tab === 'content' && (
         <>
+          {/* URL auto-fill section */}
+          <div className="card" style={{ padding: 16, marginBottom: 16 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>🔗 URL로 빠르게 추가</div>
+            <div style={{ fontSize: 12, color: 'var(--tx3)', marginBottom: 12 }}>공모전/자격증 페이지 URL을 붙여넣으면 제목, 기관, 마감일 등을 자동으로 추출합니다</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                className="form-input"
+                style={{ flex: 1 }}
+                placeholder="https://www.example.com/contest/123"
+                value={scrapeUrl}
+                onChange={e => setScrapeUrl(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleScrape()}
+              />
+              <button className="btn" onClick={handleScrape} disabled={scraping} style={{ whiteSpace: 'nowrap' }}>
+                {scraping ? '⏳ 추출 중...' : '🔍 자동 추출'}
+              </button>
+            </div>
+          </div>
+
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 16, alignItems: 'center' }}>
             <input
               className="form-input"
