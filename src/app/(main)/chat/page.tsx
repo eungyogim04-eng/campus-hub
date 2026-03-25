@@ -1,128 +1,267 @@
 'use client'
 
-import { useState, useRef, useEffect, useMemo } from 'react'
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { useToast } from '@/components/ui/Toast'
+import { createClient } from '@/lib/supabase/client'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 
-interface Message {
+/* ---------- Types ---------- */
+interface Profile {
   id: string
-  sender: string
-  text: string
-  time: string
-  isMe: boolean
+  name: string
+  dept: string
 }
 
-interface Chat {
+interface ChatMessage {
   id: string
-  type: 'group' | 'dm'
+  room_id: string
+  user_id: string
+  text: string
+  created_at: string
+}
+
+interface ChatRoom {
+  id: string
   name: string
-  avatar: string
-  members: string[]
+  type: 'dm' | 'group'
+  created_at: string
+  /* derived */
+  members: Profile[]
   lastMessage: string
   lastTime: string
-  unread: number
-  messages: Message[]
+  lastMessageUserId: string | null
 }
 
-const DEMO_CHATS: Chat[] = [
-  {
-    id: 'c1', type: 'group', name: '\uB9C8\uCF00\uD305 \uACF5\uBAA8\uC804 \uD300', avatar: '\uD83C\uDFE2',
-    members: ['\uC774\uC11C\uC5F0', '\uD55C\uC2B9\uC6B0', '\uB098'],
-    lastMessage: '\uB0B4\uC77C \uD68C\uC758 \uBA87\uC2DC\uC5D0 \uD560\uAE4C\uC694?', lastTime: '14:23', unread: 2,
-    messages: [
-      { id: 'msg1', sender: '\uC774\uC11C\uC5F0', text: '\uC0BC\uC131 \uB9C8\uCF00\uD305 \uACF5\uBAA8\uC804 \uC8FC\uC81C \uC815\uD588\uC5B4\uC694?', time: '13:50', isMe: false },
-      { id: 'msg2', sender: '\uB098', text: '\uC800\uB294 ESG \uB9C8\uCF00\uD305 \uC8FC\uC81C\uAC00 \uC88B\uC744 \uAC83 \uAC19\uC544\uC694', time: '14:02', isMe: true },
-      { id: 'msg3', sender: '\uD55C\uC2B9\uC6B0', text: '\uC88B\uC544\uC694! \uB370\uC774\uD130 \uBD84\uC11D\uC740 \uC81C\uAC00 \uB9E1\uC744\uAC8C\uC694', time: '14:15', isMe: false },
-      { id: 'msg4', sender: '\uC774\uC11C\uC5F0', text: '\uB0B4\uC77C \uD68C\uC758 \uBA87\uC2DC\uC5D0 \uD560\uAE4C\uC694?', time: '14:23', isMe: false },
-    ]
-  },
-  {
-    id: 'c2', type: 'dm', name: '\uBC15\uC900\uD601', avatar: '\uD83D\uDC68\u200D\uD83D\uDCBB',
-    members: ['\uBC15\uC900\uD601', '\uB098'],
-    lastMessage: '\uC815\uCC98\uAE30 \uAE30\uCD9C\uBB38\uC81C \uACF5\uC720\uD560\uAC8C\uC694', lastTime: '\uC5B4\uC81C', unread: 0,
-    messages: [
-      { id: 'msg5', sender: '\uBC15\uC900\uD601', text: '\uC815\uCC98\uAE30 \uAC19\uC774 \uACF5\uBD80\uD558\uC2E4\uB798\uC694?', time: '\uC5B4\uC81C 10:30', isMe: false },
-      { id: 'msg6', sender: '\uB098', text: '\uB124! \uC800\uB3C4 \uC774\uBC88\uC5D0 \uC900\uBE44\uD558\uB824\uACE0\uC694', time: '\uC5B4\uC81C 10:45', isMe: true },
-      { id: 'msg7', sender: '\uBC15\uC900\uD601', text: '\uC815\uCC98\uAE30 \uAE30\uCD9C\uBB38\uC81C \uACF5\uC720\uD560\uAC8C\uC694', time: '\uC5B4\uC81C 11:00', isMe: false },
-    ]
-  },
-  {
-    id: 'c3', type: 'dm', name: '\uAE40\uD558\uC740', avatar: '\uD83D\uDC69\u200D\uD83D\uDCBB',
-    members: ['\uAE40\uD558\uC740', '\uB098'],
-    lastMessage: '\uBD80\uC2A4\uD2B8\uCEA0\uD504 \uCF54\uB529\uD14C\uC2A4\uD2B8 \uC900\uBE44 \uC5B4\uB5BB\uAC8C \uD558\uC138\uC694?', lastTime: '3\uC77C \uC804', unread: 1,
-    messages: [
-      { id: 'msg8', sender: '\uAE40\uD558\uC740', text: '\uBD80\uC2A4\uD2B8\uCEA0\uD504 \uCF54\uB529\uD14C\uC2A4\uD2B8 \uC900\uBE44 \uC5B4\uB5BB\uAC8C \uD558\uC138\uC694?', time: '3\uC77C \uC804', isMe: false },
-    ]
-  },
-]
-
-const LS_KEY = 'campus-hub-chats'
-
-function loadChats(): Chat[] {
-  if (typeof window === 'undefined') return DEMO_CHATS
-  try {
-    const saved = localStorage.getItem(LS_KEY)
-    if (saved) return JSON.parse(saved)
-  } catch {}
-  return DEMO_CHATS
+/* ---------- Helpers ---------- */
+function formatTime(iso: string) {
+  const d = new Date(iso)
+  const now = new Date()
+  const diff = now.getTime() - d.getTime()
+  if (diff < 86_400_000 && d.getDate() === now.getDate()) {
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+  }
+  if (diff < 86_400_000 * 2) return '어제'
+  if (diff < 86_400_000 * 7) return `${Math.floor(diff / 86_400_000)}일 전`
+  return `${d.getMonth() + 1}/${d.getDate()}`
 }
 
-function saveChats(chats: Chat[]) {
-  try {
-    localStorage.setItem(LS_KEY, JSON.stringify(chats))
-  } catch {}
-}
-
+/* ---------- Component ---------- */
 export default function ChatPage() {
   const { showToast } = useToast()
-  const [chats, setChats] = useState<Chat[]>(() => loadChats())
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null)
+  const supabase = useMemo(() => createClient(), [])
+
+  const [userId, setUserId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [rooms, setRooms] = useState<ChatRoom[]>([])
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null)
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [search, setSearch] = useState('')
   const [input, setInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const channelRef = useRef<RealtimeChannel | null>(null)
 
-  const selectedChat = useMemo(() => chats.find(c => c.id === selectedChatId) || null, [chats, selectedChatId])
+  const selectedRoom = useMemo(() => rooms.find(r => r.id === selectedRoomId) ?? null, [rooms, selectedRoomId])
 
-  const filteredChats = useMemo(() => {
-    if (!search.trim()) return chats
-    const q = search.toLowerCase()
-    return chats.filter(c => c.name.toLowerCase().includes(q) || c.lastMessage.toLowerCase().includes(q))
-  }, [chats, search])
+  /* ---- Auth ---- */
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id ?? null)
+      setLoading(false)
+    })
+  }, [supabase])
+
+  /* ---- Fetch rooms ---- */
+  const fetchRooms = useCallback(async () => {
+    if (!userId) return
+
+    // rooms the user belongs to
+    const { data: memberRows } = await supabase
+      .from('chat_members')
+      .select('room_id')
+      .eq('user_id', userId)
+
+    if (!memberRows || memberRows.length === 0) { setRooms([]); return }
+
+    const roomIds = memberRows.map(r => r.room_id)
+
+    const { data: roomRows } = await supabase
+      .from('chat_rooms')
+      .select('*')
+      .in('id', roomIds)
+
+    if (!roomRows) { setRooms([]); return }
+
+    // all members for these rooms
+    const { data: allMembers } = await supabase
+      .from('chat_members')
+      .select('room_id, user_id')
+      .in('room_id', roomIds)
+
+    const memberUserIds = [...new Set((allMembers ?? []).map(m => m.user_id))]
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, name, dept')
+      .in('id', memberUserIds)
+
+    const profileMap: Record<string, Profile> = {}
+    ;(profiles ?? []).forEach(p => { profileMap[p.id] = p })
+
+    // latest message per room
+    const { data: latestMsgs } = await supabase
+      .from('chat_messages')
+      .select('*')
+      .in('room_id', roomIds)
+      .order('created_at', { ascending: false })
+
+    const latestByRoom: Record<string, ChatMessage> = {}
+    ;(latestMsgs ?? []).forEach(m => {
+      if (!latestByRoom[m.room_id]) latestByRoom[m.room_id] = m
+    })
+
+    const built: ChatRoom[] = roomRows.map(room => {
+      const roomMembers = (allMembers ?? [])
+        .filter(m => m.room_id === room.id)
+        .map(m => profileMap[m.user_id])
+        .filter(Boolean)
+
+      const latest = latestByRoom[room.id]
+
+      // For DMs, show the other person's name
+      let displayName = room.name
+      if (room.type === 'dm') {
+        const other = roomMembers.find(m => m.id !== userId)
+        if (other) displayName = other.name
+      }
+
+      return {
+        id: room.id,
+        name: displayName,
+        type: room.type,
+        created_at: room.created_at,
+        members: roomMembers,
+        lastMessage: latest?.text ?? '',
+        lastTime: latest ? formatTime(latest.created_at) : '',
+        lastMessageUserId: latest?.user_id ?? null,
+      }
+    })
+
+    // sort by latest message time descending
+    built.sort((a, b) => {
+      const la = latestByRoom[a.id]?.created_at ?? a.created_at
+      const lb = latestByRoom[b.id]?.created_at ?? b.created_at
+      return new Date(lb).getTime() - new Date(la).getTime()
+    })
+
+    setRooms(built)
+  }, [userId, supabase])
+
+  useEffect(() => { fetchRooms() }, [fetchRooms])
+
+  /* ---- Real-time: refresh room list on any new message ---- */
+  useEffect(() => {
+    if (!userId) return
+
+    const channel = supabase
+      .channel('chat-rooms-refresh')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+        () => { fetchRooms() }
+      )
+      .subscribe()
+
+    channelRef.current = channel
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [userId, supabase, fetchRooms])
+
+  /* ---- Real-time: append messages in the selected room ---- */
+  useEffect(() => {
+    if (!userId || !selectedRoomId) return
+
+    const channel = supabase
+      .channel(`room-${selectedRoomId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_messages',
+          filter: `room_id=eq.${selectedRoomId}`,
+        },
+        (payload) => {
+          const newMsg = payload.new as ChatMessage
+          setMessages(prev => {
+            if (prev.some(m => m.id === newMsg.id)) return prev
+            return [...prev, newMsg]
+          })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [userId, selectedRoomId, supabase])
+
+  /* ---- Fetch messages for selected room ---- */
+  useEffect(() => {
+    if (!selectedRoomId) { setMessages([]); return }
+
+    const load = async () => {
+      const { data } = await supabase
+        .from('chat_messages')
+        .select('*')
+        .eq('room_id', selectedRoomId)
+        .order('created_at', { ascending: true })
+
+      setMessages(data ?? [])
+    }
+    load()
+  }, [selectedRoomId, supabase])
+
+  /* ---- Auto-scroll ---- */
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages.length, selectedRoomId])
+
+  /* ---- Profiles cache for message display ---- */
+  const [profileMap, setProfileMap] = useState<Record<string, Profile>>({})
 
   useEffect(() => {
-    if (selectedChat) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [selectedChat?.messages.length, selectedChatId])
+    // build map from room members
+    const map: Record<string, Profile> = {}
+    rooms.forEach(r => r.members.forEach(m => { map[m.id] = m }))
+    setProfileMap(map)
+  }, [rooms])
 
-  const handleSelectChat = (chatId: string) => {
-    setSelectedChatId(chatId)
-    setChats(prev => {
-      const updated = prev.map(c => c.id === chatId ? { ...c, unread: 0 } : c)
-      saveChats(updated)
-      return updated
-    })
+  /* ---- Filtered rooms ---- */
+  const filteredRooms = useMemo(() => {
+    if (!search.trim()) return rooms
+    const q = search.toLowerCase()
+    return rooms.filter(r => r.name.toLowerCase().includes(q) || r.lastMessage.toLowerCase().includes(q))
+  }, [rooms, search])
+
+  /* ---- Handlers ---- */
+  const handleSelectRoom = (roomId: string) => {
+    setSelectedRoomId(roomId)
   }
 
-  const handleSend = () => {
-    if (!input.trim() || !selectedChatId) return
-    const now = new Date()
-    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
-    const newMsg: Message = {
-      id: `msg-${Date.now()}`,
-      sender: '\uB098',
-      text: input.trim(),
-      time: timeStr,
-      isMe: true,
-    }
-    setChats(prev => {
-      const updated = prev.map(c => {
-        if (c.id !== selectedChatId) return c
-        return { ...c, messages: [...c.messages, newMsg], lastMessage: newMsg.text, lastTime: timeStr }
-      })
-      saveChats(updated)
-      return updated
-    })
+  const handleSend = async () => {
+    if (!input.trim() || !selectedRoomId || !userId) return
+    const text = input.trim()
     setInput('')
+
+    const { error } = await supabase
+      .from('chat_messages')
+      .insert({ room_id: selectedRoomId, user_id: userId, text })
+
+    if (error) {
+      showToast('메시지 전송에 실패했습니다')
+      setInput(text)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -133,7 +272,24 @@ export default function ChatPage() {
   }
 
   const handleNewChat = () => {
-    showToast('\uC0C8 \uCC44\uD305 \uAE30\uB2A5\uC740 \uB370\uBAA8 \uBC84\uC804\uC5D0\uC11C \uC9C0\uC6D0\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4')
+    showToast('스터디 메이트에서 채팅을 시작할 수 있습니다')
+  }
+
+  /* ---- Not logged in / loading ---- */
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 60px)', color: 'var(--tx3)', fontSize: 14 }}>
+        로딩 중...
+      </div>
+    )
+  }
+
+  if (!userId) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'calc(100vh - 60px)', color: 'var(--tx3)', fontSize: 14 }}>
+        로그인하면 채팅을 이용할 수 있어요
+      </div>
+    )
   }
 
   /* ---- Chat List Panel ---- */
@@ -147,7 +303,7 @@ export default function ChatPage() {
         padding: '16px 16px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderBottom: '1px solid var(--bor)',
       }}>
-        <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{'\uCC44\uD305'}</h1>
+        <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>채팅</h1>
         <button
           onClick={handleNewChat}
           style={{
@@ -155,7 +311,7 @@ export default function ChatPage() {
             padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer',
           }}
         >
-          {'\uC0C8 \uCC44\uD305'}
+          새 채팅
         </button>
       </div>
 
@@ -163,7 +319,7 @@ export default function ChatPage() {
       <div style={{ padding: '8px 16px' }}>
         <input
           type="text"
-          placeholder={'\uCC44\uD305 \uAC80\uC0C9...'}
+          placeholder="채팅 검색..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           style={{
@@ -177,72 +333,78 @@ export default function ChatPage() {
 
       {/* Chat Items */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
-        {filteredChats.map(chat => (
-          <div
-            key={chat.id}
-            onClick={() => handleSelectChat(chat.id)}
-            style={{
-              padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12,
-              background: selectedChatId === chat.id ? '#FFF3E6' : 'transparent',
-              transition: 'background .12s',
-            }}
-            onMouseEnter={e => { if (selectedChatId !== chat.id) (e.currentTarget.style.background = 'var(--sur2)') }}
-            onMouseLeave={e => { if (selectedChatId !== chat.id) (e.currentTarget.style.background = 'transparent') }}
-          >
-            <div style={{
-              width: 44, height: 44, borderRadius: '50%', background: 'var(--sur2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0,
-            }}>
-              {chat.avatar}
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                <span style={{ fontSize: 14, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {chat.name}
-                  {chat.type === 'group' && (
-                    <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--tx3)', marginLeft: 4 }}>
-                      {chat.members.length}
-                    </span>
-                  )}
-                </span>
-                <span style={{ fontSize: 11, color: 'var(--tx3)', flexShrink: 0 }}>{chat.lastTime}</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 2 }}>
-                <span style={{
-                  fontSize: 12, color: 'var(--tx3)', whiteSpace: 'nowrap',
-                  overflow: 'hidden', textOverflow: 'ellipsis',
-                }}>
-                  {chat.lastMessage}
-                </span>
-                {chat.unread > 0 && (
-                  <span style={{
-                    background: '#E8913A', color: '#fff', fontSize: 10, fontWeight: 700,
-                    minWidth: 18, height: 18, borderRadius: '50%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    padding: '0 5px', flexShrink: 0,
-                  }}>
-                    {chat.unread}
-                  </span>
-                )}
-              </div>
-            </div>
+        {filteredRooms.length === 0 && (
+          <div style={{ padding: 24, textAlign: 'center', color: 'var(--tx3)', fontSize: 13 }}>
+            채팅방이 없습니다
           </div>
-        ))}
+        )}
+        {filteredRooms.map(room => {
+          const isUnread = room.lastMessageUserId !== null && room.lastMessageUserId !== userId
+          return (
+            <div
+              key={room.id}
+              onClick={() => handleSelectRoom(room.id)}
+              style={{
+                padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12,
+                background: selectedRoomId === room.id ? '#FFF3E6' : 'transparent',
+                transition: 'background .12s',
+              }}
+              onMouseEnter={e => { if (selectedRoomId !== room.id) e.currentTarget.style.background = 'var(--sur2)' }}
+              onMouseLeave={e => { if (selectedRoomId !== room.id) e.currentTarget.style.background = 'transparent' }}
+            >
+              <div style={{
+                width: 44, height: 44, borderRadius: '50%', background: 'var(--sur2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0,
+              }}>
+                {room.type === 'group' ? '\uD83D\uDC65' : '\uD83D\uDC64'}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                  <span style={{
+                    fontSize: 14, fontWeight: isUnread && selectedRoomId !== room.id ? 700 : 600,
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>
+                    {room.name}
+                    {room.type === 'group' && (
+                      <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--tx3)', marginLeft: 4 }}>
+                        {room.members.length}
+                      </span>
+                    )}
+                  </span>
+                  <span style={{ fontSize: 11, color: 'var(--tx3)', flexShrink: 0 }}>{room.lastTime}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 2 }}>
+                  <span style={{
+                    fontSize: 12, color: 'var(--tx3)', whiteSpace: 'nowrap',
+                    overflow: 'hidden', textOverflow: 'ellipsis',
+                    fontWeight: isUnread && selectedRoomId !== room.id ? 600 : 400,
+                  }}>
+                    {room.lastMessage}
+                  </span>
+                  {isUnread && selectedRoomId !== room.id && (
+                    <span style={{
+                      background: '#E8913A', width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+                    }} />
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
 
   /* ---- Chat Detail Panel ---- */
-  const chatDetailPanel = selectedChat ? (
+  const chatDetailPanel = selectedRoom ? (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--bg)' }}>
       {/* Detail Header */}
       <div style={{
         padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12,
         borderBottom: '1px solid var(--bor)', background: 'var(--sur)',
       }}>
-        {/* Mobile back button */}
         <button
-          onClick={() => setSelectedChatId(null)}
+          onClick={() => setSelectedRoomId(null)}
           className="chat-back-btn"
           style={{
             display: 'none', background: 'none', border: 'none', fontSize: 18,
@@ -255,13 +417,13 @@ export default function ChatPage() {
           width: 36, height: 36, borderRadius: '50%', background: 'var(--sur2)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0,
         }}>
-          {selectedChat.avatar}
+          {selectedRoom.type === 'group' ? '\uD83D\uDC65' : '\uD83D\uDC64'}
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 15, fontWeight: 600 }}>{selectedChat.name}</div>
-          {selectedChat.type === 'group' && (
+          <div style={{ fontSize: 15, fontWeight: 600 }}>{selectedRoom.name}</div>
+          {selectedRoom.type === 'group' && (
             <div style={{ fontSize: 11, color: 'var(--tx3)' }}>
-              {'\uBA64\uBC84 '}{selectedChat.members.length}{'\uBA85'}
+              멤버 {selectedRoom.members.length}명
             </div>
           )}
         </div>
@@ -270,7 +432,7 @@ export default function ChatPage() {
             background: 'none', border: 'none', fontSize: 18, cursor: 'pointer',
             color: 'var(--tx3)', padding: '4px 8px',
           }}
-          onClick={() => showToast('\uBA54\uB274 \uAE30\uB2A5\uC740 \uC900\uBE44 \uC911\uC785\uB2C8\uB2E4')}
+          onClick={() => showToast('메뉴 기능은 준비 중입니다')}
         >
           {'\u22EE'}
         </button>
@@ -278,34 +440,38 @@ export default function ChatPage() {
 
       {/* Messages */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {selectedChat.messages.map(msg => (
-          <div
-            key={msg.id}
-            style={{
-              display: 'flex', flexDirection: 'column',
-              alignItems: msg.isMe ? 'flex-end' : 'flex-start',
-            }}
-          >
-            {!msg.isMe && selectedChat.type === 'group' && (
-              <span style={{ fontSize: 11, color: 'var(--tx3)', marginBottom: 2, marginLeft: 4 }}>
-                {msg.sender}
+        {messages.map(msg => {
+          const isMe = msg.user_id === userId
+          const sender = profileMap[msg.user_id]
+          return (
+            <div
+              key={msg.id}
+              style={{
+                display: 'flex', flexDirection: 'column',
+                alignItems: isMe ? 'flex-end' : 'flex-start',
+              }}
+            >
+              {!isMe && selectedRoom.type === 'group' && (
+                <span style={{ fontSize: 11, color: 'var(--tx3)', marginBottom: 2, marginLeft: 4 }}>
+                  {sender?.name ?? '알 수 없음'}
+                </span>
+              )}
+              <div style={{
+                maxWidth: '70%',
+                padding: '10px 14px',
+                borderRadius: isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                background: isMe ? '#E8913A' : 'var(--sur2)',
+                color: isMe ? '#fff' : 'var(--tx)',
+                fontSize: 14, lineHeight: 1.5, wordBreak: 'break-word',
+              }}>
+                {msg.text}
+              </div>
+              <span style={{ fontSize: 10, color: 'var(--tx3)', marginTop: 2, padding: '0 4px' }}>
+                {formatTime(msg.created_at)}
               </span>
-            )}
-            <div style={{
-              maxWidth: '70%',
-              padding: '10px 14px',
-              borderRadius: msg.isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-              background: msg.isMe ? '#E8913A' : 'var(--sur2)',
-              color: msg.isMe ? '#fff' : 'var(--tx)',
-              fontSize: 14, lineHeight: 1.5, wordBreak: 'break-word',
-            }}>
-              {msg.text}
             </div>
-            <span style={{ fontSize: 10, color: 'var(--tx3)', marginTop: 2, padding: '0 4px' }}>
-              {msg.time}
-            </span>
-          </div>
-        ))}
+          )
+        })}
         <div ref={messagesEndRef} />
       </div>
 
@@ -317,7 +483,7 @@ export default function ChatPage() {
       }}>
         <input
           type="text"
-          placeholder={'\uBA54\uC2DC\uC9C0\uB97C \uC785\uB825\uD558\uC138\uC694...'}
+          placeholder="메시지를 입력하세요..."
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -345,7 +511,7 @@ export default function ChatPage() {
       flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
       color: 'var(--tx3)', fontSize: 14, background: 'var(--bg)',
     }}>
-      {'\uCC44\uD305\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694'}
+      채팅을 선택해주세요
     </div>
   )
 
@@ -373,11 +539,11 @@ export default function ChatPage() {
         }
       `}</style>
       <div style={{ display: 'flex', height: 'calc(100vh - 60px)', overflow: 'hidden' }}>
-        <div className={`chat-list-panel${selectedChatId ? ' chat-hidden-mobile' : ''}`}>
+        <div className={`chat-list-panel${selectedRoomId ? ' chat-hidden-mobile' : ''}`}>
           {chatListPanel}
         </div>
         <div
-          className={`chat-detail-panel${!selectedChatId ? ' chat-hidden-mobile' : ''}`}
+          className={`chat-detail-panel${!selectedRoomId ? ' chat-hidden-mobile' : ''}`}
           style={{ flex: 1, display: 'flex' }}
         >
           {chatDetailPanel}
