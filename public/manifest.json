@@ -1,6 +1,6 @@
 {
-  "name": "캠퍼스 허브",
-  "short_name": "캠퍼스허브",
+  "name": "스펙잇",
+  "short_name": "SpecIt",
   "description": "대학생 공모전·자격증·대외활동 올인원 플랫폼",
   "start_url": "/dashboard",
   "scope": "/",

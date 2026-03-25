@@ -51,7 +51,7 @@ export default function ExportButton({ data, columns, filename, title }: ExportB
       tr:hover td{background:#fafafa}
       @media print{body{padding:20px}}</style></head><body>
       <h1>${title}</h1>
-      <div class="meta">캠퍼스 허브 · ${new Date().toLocaleDateString('ko-KR')} · ${data.length}건</div>
+      <div class="meta">스펙잇 · ${new Date().toLocaleDateString('ko-KR')} · ${data.length}건</div>
       <table><thead><tr>${columns.map(c => `<th>${c.label}</th>`).join('')}</tr></thead>
       <tbody>${data.map(row => `<tr>${columns.map(c => `<td>${row[c.key] ?? ''}</td>`).join('')}</tr>`).join('')}</tbody></table>
       </body></html>`)

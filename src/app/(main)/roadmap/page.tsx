@@ -16,7 +16,7 @@ export default function RoadmapPage() {
   return (
     <div>
       <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
-        <div className="flex items-center gap-3"><div><div className="text-xl font-semibold">스펙 로드맵</div><div className="text-[13px] text-[var(--tx3)] mt-0.5">학년별 추천 스펙 타임라인</div></div><ShareButton title="캠퍼스 허브 - 스펙 로드맵" description="학년별 추천 스펙을 확인하세요!" /></div>
+        <div className="flex items-center gap-3"><div><div className="text-xl font-semibold">스펙 로드맵</div><div className="text-[13px] text-[var(--tx3)] mt-0.5">학년별 추천 스펙 타임라인</div></div><ShareButton title="스펙잇 - 스펙 로드맵" description="학년별 추천 스펙을 확인하세요!" /></div>
         <div className="flex items-center gap-1.5"><span className="text-xs text-[var(--tx3)]">학년</span><div className="flex border border-[var(--bor2)] rounded-lg overflow-hidden">{[1,2,3,4].map(y=>(<div key={y} className={`grade-tab ${year===y?'active':''}`} onClick={()=>setYear(y)}>{y}학년</div>))}</div></div>
       </div>
       <div className="card mb-5" style={{padding:'16px 18px'}}><div className="flex items-center justify-between mb-2.5"><div className="text-[13px] font-semibold">{year}학년 로드맵 · <span className="text-[var(--p)]">{profile?.department||'경영·경제'}</span></div><div className="text-xs text-[var(--tx3)]">{dc}/{tot} 완료</div></div><div className="progress-wrap"><div className="progress-bar" style={{width:`${tot?Math.round(dc/tot*100):0}%`}}/></div></div>

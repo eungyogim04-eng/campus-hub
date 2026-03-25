@@ -1,13 +1,13 @@
 import Link from 'next/link'
 
-export const metadata = { title: '개인정보처리방침 | 캠퍼스 허브' }
+export const metadata = { title: '개인정보처리방침 | 스펙잇' }
 
 const sections = [
   {
     title: '1. 개인정보의 수집 및 이용 목적',
     content: (
       <>
-        <p>캠퍼스 허브는 다음의 목적을 위해 개인정보를 수집 및 이용합니다.</p>
+        <p>스펙잇는 다음의 목적을 위해 개인정보를 수집 및 이용합니다.</p>
         <ul>
           <li><strong>회원가입 및 서비스 이용:</strong> 회원 식별, 본인 인증, 서비스 제공 및 계정 관리</li>
           <li><strong>서비스 개선 및 통계 분석:</strong> 이용 현황 분석, 서비스 품질 향상, 맞춤형 정보 제공</li>
@@ -86,7 +86,7 @@ const sections = [
     title: '4. 개인정보의 제3자 제공',
     content: (
       <>
-        <p>캠퍼스 허브는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, 다음의 경우에는 예외로 합니다.</p>
+        <p>스펙잇는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, 다음의 경우에는 예외로 합니다.</p>
         <ul>
           <li>이용자가 사전에 동의한 경우</li>
           <li>법령의 규정에 의하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
@@ -98,7 +98,7 @@ const sections = [
     title: '5. 개인정보의 처리 위탁',
     content: (
       <>
-        <p>캠퍼스 허브는 원활한 서비스 제공을 위해 다음과 같이 개인정보 처리 업무를 위탁하고 있습니다.</p>
+        <p>스펙잇는 원활한 서비스 제공을 위해 다음과 같이 개인정보 처리 업무를 위탁하고 있습니다.</p>
         <table>
           <thead>
             <tr>
@@ -124,7 +124,7 @@ const sections = [
     title: '6. 개인정보의 파기 절차 및 방법',
     content: (
       <>
-        <p>캠퍼스 허브는 개인정보의 수집 및 이용 목적이 달성된 후에는 다음의 방법으로 파기합니다.</p>
+        <p>스펙잇는 개인정보의 수집 및 이용 목적이 달성된 후에는 다음의 방법으로 파기합니다.</p>
         <ul>
           <li><strong>전자적 파일 형태:</strong> 복구 및 재생이 불가능한 기술적 방법을 사용하여 안전하게 삭제</li>
           <li><strong>서면 형태:</strong> 분쇄기로 분쇄하거나 소각하여 파기</li>
@@ -151,7 +151,7 @@ const sections = [
     title: '8. 개인정보 보호책임자',
     content: (
       <>
-        <p>캠퍼스 허브는 개인정보 처리에 관한 업무를 총괄하는 개인정보 보호책임자를 다음과 같이 지정하고 있습니다.</p>
+        <p>스펙잇는 개인정보 처리에 관한 업무를 총괄하는 개인정보 보호책임자를 다음과 같이 지정하고 있습니다.</p>
         <div className="dpo-info">
           <div><span className="label">이름</span>김은교</div>
           <div><span className="label">이메일</span><a href="mailto:eungyogim04@gmail.com">eungyogim04@gmail.com</a></div>
@@ -164,7 +164,7 @@ const sections = [
     title: '9. 개인정보의 안전성 확보 조치',
     content: (
       <>
-        <p>캠퍼스 허브는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
+        <p>스펙잇는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
         <ul>
           <li><strong>SSL/TLS 암호화:</strong> 데이터 전송 시 암호화 통신을 적용하여 개인정보를 보호합니다.</li>
           <li><strong>접근 권한 제한:</strong> 개인정보에 접근할 수 있는 담당자를 최소한으로 제한합니다.</li>
@@ -177,7 +177,7 @@ const sections = [
     title: '10. 쿠키의 사용',
     content: (
       <>
-        <p>캠퍼스 허브는 서비스 이용 편의를 위해 쿠키(Cookie)를 사용합니다.</p>
+        <p>스펙잇는 서비스 이용 편의를 위해 쿠키(Cookie)를 사용합니다.</p>
         <ul>
           <li><strong>사용 목적:</strong> 로그인 상태 유지, 사용자 설정 저장, 서비스 이용 통계 수집</li>
           <li><strong>쿠키 거부 방법:</strong> 브라우저 설정에서 쿠키 저장을 거부할 수 있습니다. 다만, 쿠키를 거부할 경우 일부 서비스 이용에 제한이 있을 수 있습니다.</li>
@@ -219,7 +219,7 @@ export default function PrivacyPage() {
         개인정보처리방침
       </h1>
       <p style={{ fontSize: 14, color: 'var(--tx3, #8e8e93)', marginBottom: 32, lineHeight: 1.6 }}>
-        캠퍼스 허브(이하 &quot;서비스&quot;)는 개인정보보호법 제30조에 따라 이용자의 개인정보를 보호하고,
+        스펙잇(이하 &quot;서비스&quot;)는 개인정보보호법 제30조에 따라 이용자의 개인정보를 보호하고,
         이와 관련한 고충을 신속하고 원활하게 처리하기 위하여 다음과 같이 개인정보 처리방침을 수립 및 공개합니다.
       </p>
 
@@ -245,7 +245,7 @@ export default function PrivacyPage() {
         }}
       >
         <p>시행일: 2026년 3월 24일</p>
-        <p style={{ marginTop: 4 }}>캠퍼스 허브</p>
+        <p style={{ marginTop: 4 }}>스펙잇</p>
       </div>
 
       <style>{`

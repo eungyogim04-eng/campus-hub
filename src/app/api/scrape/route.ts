@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     if (!url) return NextResponse.json({ error: 'URL required' }, { status: 400 })
 
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; CampusHub/1.0)' },
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SpecIt/1.0)' },
       signal: AbortSignal.timeout(10000),
     })
     const html = await res.text()

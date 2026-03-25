@@ -1,6 +1,6 @@
 'use client'
 
-/* 커스텀 SVG 일러스트레이션 - 캠퍼스 허브 전용 */
+/* 커스텀 SVG 일러스트레이션 - 스펙잇 전용 */
 
 export function HeroIllust() {
   return (

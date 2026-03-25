@@ -24,7 +24,7 @@ export default function FeedbackPage() {
     if (!body.trim()) { showToast('⚠️ 내용을 입력해주세요'); return }
 
     // mailto로 이메일 발송
-    const subject = `[캠퍼스허브 피드백] [${CATEGORIES.find(c => c.key === category)?.label}] ${title}`
+    const subject = `[스펙잇 피드백] [${CATEGORIES.find(c => c.key === category)?.label}] ${title}`
     const mailBody = [
       `카테고리: ${CATEGORIES.find(c => c.key === category)?.label}`,
       `제목: ${title}`,
@@ -60,12 +60,12 @@ export default function FeedbackPage() {
     <div>
       <div className="mb-6">
         <div className="text-xl font-semibold">피드백 보내기</div>
-        <div className="text-[13px] text-[var(--tx3)] mt-0.5">캠퍼스 허브를 더 좋게 만들어주세요. 의견을 이메일로 보내드립니다.</div>
+        <div className="text-[13px] text-[var(--tx3)] mt-0.5">스펙잇를 더 좋게 만들어주세요. 의견을 이메일로 보내드립니다.</div>
       </div>
 
       {/* 만족도 */}
       <div className="card mb-4">
-        <div className="card-title">캠퍼스 허브 만족도</div>
+        <div className="card-title">스펙잇 만족도</div>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', padding: '12px 0' }}>
           {[1, 2, 3, 4, 5].map(n => (
             <button key={n} onClick={() => setRating(n)} style={{

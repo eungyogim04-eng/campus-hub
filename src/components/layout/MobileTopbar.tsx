@@ -12,7 +12,7 @@ export default function MobileTopbar({ onMenuClick }: MobileTopbarProps) {
       height: 52, padding: '0 16px', display: 'flex',
       alignItems: 'center', justifyContent: 'space-between',
     }}>
-      <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--p)' }}>🎓 캠퍼스 허브</div>
+      <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--p)' }}>✨ 스펙잇</div>
       <button
         onClick={onMenuClick}
         aria-label="메뉴 열기"

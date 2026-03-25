@@ -73,9 +73,9 @@ export default function Sidebar({ profile, mobileOpen, onClose, scheduleCount = 
             width: 30, height: 30, background: 'linear-gradient(135deg, #E8913A, #F0A85C)',
             borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
           }}>
-            🏫
+            ✨
           </div>
-          캠퍼스 허브
+          스펙잇
         </div>
 
         {NAV_ITEMS.map((group, gi) => (

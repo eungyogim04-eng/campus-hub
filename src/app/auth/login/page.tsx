@@ -57,9 +57,9 @@ export default function LoginPage() {
         <div style={{ position: 'absolute', bottom: -40, left: -40, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
 
         <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 72, marginBottom: 24 }}>🎓</div>
+          <div style={{ fontSize: 72, marginBottom: 24 }}>✨</div>
           <h1 style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>
-            캠퍼스 허브
+            스펙잇
           </h1>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.9)', lineHeight: 1.6, maxWidth: 320 }}>
             공모전 · 자격증 · 대외활동<br />
@@ -89,8 +89,8 @@ export default function LoginPage() {
         <div style={{ width: '100%', maxWidth: 400 }}>
           {/* Mobile logo */}
           <div className="md:hidden" style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 48, marginBottom: 8 }}>🎓</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#C7621E' }}>캠퍼스 허브</div>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>✨</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#C7621E' }}>스펙잇</div>
           </div>
 
           <h2 style={{ fontSize: 28, fontWeight: 800, color: '#1d1d1f', marginBottom: 4 }}>로그인</h2>
@@ -202,7 +202,7 @@ export default function LoginPage() {
             onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E6' }}
             onMouseLeave={e => { e.currentTarget.style.background = '#FFF8F0' }}
           >
-            🎓 로그인 없이 데모 체험하기
+            ✨ 로그인 없이 데모 체험하기
           </button>
 
           {/* Footer */}

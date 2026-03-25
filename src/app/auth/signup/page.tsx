@@ -57,7 +57,7 @@ export default function SignupPage() {
         <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ fontSize: 72, marginBottom: 24 }}>🚀</div>
           <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>
-            대학생활의 시작,<br />캠퍼스 허브
+            대학생활의 시작,<br />스펙잇
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, maxWidth: 300 }}>
             30초만에 가입하고<br />
@@ -83,12 +83,12 @@ export default function SignupPage() {
         <div style={{ width: '100%', maxWidth: 400 }}>
           {/* Mobile logo */}
           <div className="md:hidden" style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 48, marginBottom: 8 }}>🎓</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#C7621E' }}>캠퍼스 허브</div>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>✨</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#C7621E' }}>스펙잇</div>
           </div>
 
           <h2 style={{ fontSize: 28, fontWeight: 800, color: '#1d1d1f', marginBottom: 4 }}>회원가입</h2>
-          <p style={{ fontSize: 14, color: '#8e8e93', marginBottom: 28 }}>캠퍼스 허브에 가입하고 맞춤 정보를 받아보세요</p>
+          <p style={{ fontSize: 14, color: '#8e8e93', marginBottom: 28 }}>스펙잇에 가입하고 맞춤 정보를 받아보세요</p>
 
           {error && (
             <div style={{
@@ -185,7 +185,7 @@ export default function SignupPage() {
             onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E6' }}
             onMouseLeave={e => { e.currentTarget.style.background = '#FFF8F0' }}
           >
-            🎓 가입 없이 데모 체험하기
+            ✨ 가입 없이 데모 체험하기
           </button>
 
           <p style={{ textAlign: 'center', fontSize: 13, color: '#8e8e93', marginTop: 24 }}>

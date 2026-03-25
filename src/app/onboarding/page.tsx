@@ -43,8 +43,8 @@ function OnboardingContent() {
 
         {step === 0 && (
           <div>
-            <div className="text-5xl mb-4">🎓</div>
-            <div className="text-[22px] font-bold mb-2">캠퍼스 허브에 오신 걸 환영해요!</div>
+            <div className="text-5xl mb-4">✨</div>
+            <div className="text-[22px] font-bold mb-2">스펙잇에 오신 걸 환영해요!</div>
             <div className="text-sm text-[var(--tx2)] leading-relaxed mb-7">공모전·자격증·대외활동 정보를 한 곳에서.<br />딱 1분이면 설정 완료돼요.</div>
             <button className="btn w-full justify-center py-3" onClick={handleNext}>시작하기 →</button>
           </div>

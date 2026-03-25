@@ -75,7 +75,7 @@ export default function LandingClient() {
       }}>
         <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontSize: 18, fontWeight: 700, color: '#060b11', display: 'flex', alignItems: 'center', gap: 8 }}>
-            🎓 캠퍼스 허브
+            ✨ 스펙잇
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Link href="/auth/login" style={{ fontSize: 15, color: '#6e6e73', fontWeight: 500 }}>로그인</Link>
@@ -196,7 +196,7 @@ export default function LandingClient() {
             }}>
               흩어진 공모전 정보, 까먹는 마감일,<br />
               복잡한 학점 계산.<br />
-              <span style={{ color: '#3182f6' }}>캠퍼스 허브 하나로 끝.</span>
+              <span style={{ color: '#3182f6' }}>스펙잇 하나로 끝.</span>
             </p>
           </div>
         </Reveal>
@@ -250,7 +250,7 @@ export default function LandingClient() {
       {/* ═══ FOOTER ═══ */}
       <footer style={{ borderTop: '1px solid rgba(0,0,0,.06)', padding: '32px 24px' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-          <div style={{ fontSize: 13, color: '#8e8e93' }}>© 2026 캠퍼스 허브</div>
+          <div style={{ fontSize: 13, color: '#8e8e93' }}>© 2026 스펙잇</div>
           <div style={{ display: 'flex', gap: 24, fontSize: 13, color: '#8e8e93' }}>
             <Link href="/terms" style={{ color: '#8e8e93' }}>이용약관</Link>
             <Link href="/privacy" style={{ color: '#8e8e93' }}>개인정보처리방침</Link>

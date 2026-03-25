@@ -87,7 +87,7 @@ export default function ProfilePage() {
 
       if (!user) {
         // Demo mode
-        setUserInfo({ name: '데모 사용자', email: 'demo@campus-hub.kr', dept: '컴퓨터공학과', studentId: '20230001' })
+        setUserInfo({ name: '데모 사용자', email: 'demo@specit.kr', dept: '컴퓨터공학과', studentId: '20230001' })
         return
       }
 

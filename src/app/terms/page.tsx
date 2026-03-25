@@ -11,7 +11,7 @@ export default function TermsPage() {
       {/* 제1조 목적 */}
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>제1조 (목적)</h2>
       <p style={{ color: '#6e6e73', fontSize: 15 }}>
-        이 약관은 캠퍼스 허브(이하 &ldquo;서비스&rdquo;)의 이용에 관한 조건 및 절차, 회원과 서비스 제공자 간의 권리&middot;의무&middot;책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+        이 약관은 스펙잇(이하 &ldquo;서비스&rdquo;)의 이용에 관한 조건 및 절차, 회원과 서비스 제공자 간의 권리&middot;의무&middot;책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
       </p>
 
       {/* 제2조 정의 */}
@@ -20,7 +20,7 @@ export default function TermsPage() {
         이 약관에서 사용하는 용어의 정의는 다음과 같습니다.
       </p>
       <ul style={{ color: '#6e6e73', fontSize: 15, paddingLeft: 20, marginTop: 8 }}>
-        <li style={{ marginBottom: 6 }}>&ldquo;서비스&rdquo;란 캠퍼스 허브가 웹사이트 및 관련 플랫폼을 통해 제공하는 공모전&middot;자격증&middot;대외활동 정보 제공, 일정 관리, 학점 관리, 커뮤니티 등의 온라인 서비스를 말합니다.</li>
+        <li style={{ marginBottom: 6 }}>&ldquo;서비스&rdquo;란 스펙잇가 웹사이트 및 관련 플랫폼을 통해 제공하는 공모전&middot;자격증&middot;대외활동 정보 제공, 일정 관리, 학점 관리, 커뮤니티 등의 온라인 서비스를 말합니다.</li>
         <li style={{ marginBottom: 6 }}>&ldquo;회원&rdquo;이란 서비스에 가입하여 이 약관에 동의하고 서비스를 이용하는 자를 말합니다.</li>
         <li style={{ marginBottom: 6 }}>&ldquo;콘텐츠&rdquo;란 서비스 내에서 제공되거나 회원이 게시한 텍스트, 이미지, 링크 등 일체의 정보를 말합니다.</li>
         <li style={{ marginBottom: 6 }}>&ldquo;게시물&rdquo;이란 회원이 서비스 내 커뮤니티 게시판 등에 작성한 글, 댓글, 자료 등을 말합니다.</li>
@@ -55,10 +55,10 @@ export default function TermsPage() {
             실제 지원 전 반드시 해당 기관의 공식 사이트에서 정보를 확인하시기 바랍니다.
           </li>
           <li style={{ marginBottom: 10 }}>
-            서비스 이용으로 발생한 직접적, 간접적 손해에 대해 캠퍼스 허브는 책임을 지지 않습니다.
+            서비스 이용으로 발생한 직접적, 간접적 손해에 대해 스펙잇는 책임을 지지 않습니다.
           </li>
           <li style={{ marginBottom: 0 }}>
-            커뮤니티에 게시된 내용은 작성자 개인의 의견이며, 캠퍼스 허브의 공식 입장과 무관합니다.
+            커뮤니티에 게시된 내용은 작성자 개인의 의견이며, 스펙잇의 공식 입장과 무관합니다.
           </li>
         </ul>
       </div>
@@ -111,7 +111,7 @@ export default function TermsPage() {
       {/* 제8조 지식재산권 */}
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>제8조 (지식재산권)</h2>
       <p style={{ color: '#6e6e73', fontSize: 15 }}>
-        서비스가 제작한 콘텐츠(디자인, 텍스트, 로고, 소프트웨어 등)에 대한 저작권 및 지식재산권은 캠퍼스 허브 또는 원저작권자에게 귀속됩니다.
+        서비스가 제작한 콘텐츠(디자인, 텍스트, 로고, 소프트웨어 등)에 대한 저작권 및 지식재산권은 스펙잇 또는 원저작권자에게 귀속됩니다.
       </p>
       <p style={{ color: '#6e6e73', fontSize: 15, marginTop: 8 }}>
         회원이 서비스 내에 게시한 게시물의 저작권은 해당 작성자에게 있습니다. 다만, 회원은 서비스 내에서 해당 게시물이 검색, 노출, 공유될 수 있도록 서비스에 이용을 허락한 것으로 간주합니다.
@@ -156,7 +156,7 @@ export default function TermsPage() {
       </ul>
 
       <div style={{ marginTop: 60, paddingTop: 24, borderTop: '1px solid rgba(0,0,0,.06)', fontSize: 13, color: '#8e8e93' }}>
-        시행일: 2026년 3월 24일 | 캠퍼스 허브
+        시행일: 2026년 3월 24일 | 스펙잇
       </div>
     </div>
   )
