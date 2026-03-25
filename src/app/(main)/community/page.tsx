@@ -15,6 +15,68 @@ const CATEGORIES: Record<string, { label: string; icon: string }> = {
   free: { label: '자유게시판', icon: '💬' },
 }
 
+const REPORT_REASONS = ['스팸/광고', '불쾌한 내용', '허위 정보', '기타']
+
+function ReportButton({ targetId, targetType = 'post' }: { targetId: string; targetType?: string }) {
+  const { showToast } = useToast()
+  const [open, setOpen] = useState(false)
+  const [reported, setReported] = useState(false)
+
+  useEffect(() => {
+    const reports = JSON.parse(localStorage.getItem('campus-hub-reports') || '[]')
+    if (reports.some((r: any) => r.targetId === targetId && r.targetType === targetType)) {
+      setReported(true)
+    }
+  }, [targetId, targetType])
+
+  const submitReport = (reason: string) => {
+    const reports = JSON.parse(localStorage.getItem('campus-hub-reports') || '[]')
+    reports.push({ targetId, targetType, reason, createdAt: new Date().toISOString() })
+    localStorage.setItem('campus-hub-reports', JSON.stringify(reports))
+    setReported(true)
+    setOpen(false)
+    showToast('신고가 접수되었습니다. 검토 후 조치하겠습니다.')
+  }
+
+  return (
+    <span className="relative" onClick={e => e.preventDefault()}>
+      {reported ? (
+        <span style={{ fontSize: 12, color: 'var(--tx3)', cursor: 'default' }}>신고됨</span>
+      ) : (
+        <span
+          onClick={e => { e.stopPropagation(); setOpen(!open) }}
+          style={{ fontSize: 12, color: 'var(--tx3)', cursor: 'pointer' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--r)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--tx3)')}
+        >🚨</span>
+      )}
+      {open && (
+        <span
+          onClick={e => e.stopPropagation()}
+          style={{
+            position: 'absolute', bottom: '100%', right: 0, marginBottom: 4,
+            background: 'var(--sur)', border: '1px solid var(--bor)', borderRadius: 8,
+            padding: '6px 0', zIndex: 50, minWidth: 130, boxShadow: '0 4px 12px rgba(0,0,0,.12)'
+          }}
+        >
+          {REPORT_REASONS.map(reason => (
+            <span
+              key={reason}
+              onClick={() => submitReport(reason)}
+              style={{
+                display: 'block', padding: '6px 14px', fontSize: 12, color: 'var(--tx2)',
+                cursor: 'pointer', whiteSpace: 'nowrap'
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--sur2)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >{reason}</span>
+          ))}
+        </span>
+      )}
+    </span>
+  )
+}
+
 export default function CommunityPage() {
   const supabase = createClient()
   const { user } = useAuth()
@@ -109,6 +171,7 @@ export default function CommunityPage() {
                   <span>❤️ {post.like_count}</span>
                   <span>💬 {post.comment_count}</span>
                   <ShareButton title={post.title} description={post.body?.slice(0,50)||''} />
+                  <ReportButton targetId={post.id} targetType="post" />
                 </div>
               </div>
             </Link>
