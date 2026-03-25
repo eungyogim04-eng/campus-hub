@@ -254,7 +254,7 @@ export default function LandingClient() {
           <div style={{ display: 'flex', gap: 24, fontSize: 13, color: '#8e8e93' }}>
             <Link href="/terms" style={{ color: '#8e8e93' }}>이용약관</Link>
             <Link href="/privacy" style={{ color: '#8e8e93' }}>개인정보처리방침</Link>
-            <a href="mailto:support@campushub.kr" style={{ color: '#8e8e93' }}>문의하기</a>
+            <a href="mailto:eungyogim04@gmail.com" style={{ color: '#8e8e93' }}>문의하기</a>
           </div>
         </div>
       </footer>

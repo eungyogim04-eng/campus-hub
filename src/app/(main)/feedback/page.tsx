@@ -35,7 +35,7 @@ export default function FeedbackPage() {
       body,
     ].join('\n')
 
-    window.open(`mailto:support@campushub.kr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(mailBody)}`)
+    window.open(`mailto:eungyogim04@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(mailBody)}`)
     setSent(true)
     showToast('📧 메일 앱이 열렸습니다! 전송해주세요.')
   }
@@ -118,7 +118,7 @@ export default function FeedbackPage() {
         📧 이메일로 피드백 보내기
       </button>
       <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--tx3)', marginTop: 8 }}>
-        support@campushub.kr 로 발송됩니다
+        eungyogim04@gmail.com 로 발송됩니다
       </div>
     </div>
   )
