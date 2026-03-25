@@ -1,10 +1,9 @@
-import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
-import LandingClient from '@/components/landing/LandingClient'
 
 export const metadata: Metadata = {
   title: '캠퍼스 허브 - 대학생 공모전·자격증·대외활동 올인원 플랫폼',
-  description: '공모전, 자격증, 대외활동 정보를 한 곳에서. 학점관리, 스펙 로드맵, 생활비 관리까지. 10,000+ 대학생이 선택한 캠퍼스 허브.',
+  description: '공모전, 자격증, 대외활동 정보를 한 곳에서. 학점관리, 스펙 로드맵, 생활비 관리까지.',
   keywords: ['공모전', '자격증', '대외활동', '대학생', '스펙', '학점관리', '캠퍼스허브'],
   openGraph: {
     title: '캠퍼스 허브 - 대학생 올인원 플랫폼',
@@ -16,5 +15,5 @@ export const metadata: Metadata = {
 }
 
 export default function LandingPage() {
-  return <LandingClient />
+  redirect('/auth/login')
 }
