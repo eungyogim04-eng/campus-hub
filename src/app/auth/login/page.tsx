@@ -68,9 +68,9 @@ export default function LoginPage() {
 
           <div style={{ marginTop: 40, display: 'flex', gap: 16, justifyContent: 'center' }}>
             {[
-              { num: '10,000+', label: '사용자' },
-              { num: '500+', label: '공모전' },
-              { num: '12개', label: '학과' },
+              { num: '12개', label: '학과 계열' },
+              { num: '무료', label: '모든 기능' },
+              { num: '실시간', label: '정보 업데이트' },
             ].map(s => (
               <div key={s.label} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>{s.num}</div>
