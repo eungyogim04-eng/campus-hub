@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Orange circle (오렌지 열매) -->
+  <circle cx="220" cy="260" r="160" fill="#E8913A"/>
+  <circle cx="220" cy="260" r="160" fill="url(#orangeGrad)"/>
+
+  <!-- 오렌지 하이라이트 -->
+  <circle cx="180" cy="220" r="60" fill="rgba(255,255,255,0.15)"/>
+
+  <!-- 오렌지 꼭지 (작은 잎) -->
+  <ellipse cx="220" cy="98" rx="12" ry="18" fill="#2D8A56" transform="rotate(-10 220 98)"/>
+  <line x1="220" y1="100" x2="220" y2="116" stroke="#5C4A1E" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- 화살표 (오렌지에서 나가면서 연두색으로) -->
+  <path d="M320 200 L420 120" stroke="url(#arrowGrad)" stroke-width="28" stroke-linecap="round"/>
+  <!-- 화살표 머리 -->
+  <polygon points="435,95 445,140 400,125" fill="#6BC06B"/>
+
+  <!-- 새싹 (화살표 끝) -->
+  <path d="M440 90 C440 60, 465 50, 470 75" stroke="#6BC06B" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M440 90 C440 60, 415 50, 410 75" stroke="#8ED08E" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- 그라디언트 정의 -->
+  <defs>
+    <linearGradient id="orangeGrad" x1="60" y1="100" x2="380" y2="420">
+      <stop offset="0%" stop-color="#F0A85C"/>
+      <stop offset="100%" stop-color="#D4780A"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="320" y1="200" x2="420" y2="120">
+      <stop offset="0%" stop-color="#E8913A"/>
+      <stop offset="100%" stop-color="#6BC06B"/>
+    </linearGradient>
+  </defs>
+</svg>

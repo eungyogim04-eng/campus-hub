@@ -57,7 +57,7 @@ export default function LoginPage() {
         <div style={{ position: 'absolute', bottom: -40, left: -40, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
 
         <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 72, marginBottom: 24 }}>✨</div>
+          <img src="/logo.png" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 24 }} />
           <h1 style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>
             스펙잇
           </h1>
@@ -89,7 +89,7 @@ export default function LoginPage() {
         <div style={{ width: '100%', maxWidth: 400 }}>
           {/* Mobile logo */}
           <div className="md:hidden" style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 48, marginBottom: 8 }}>✨</div>
+            <img src="/logo.png" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 8 }} />
             <div style={{ fontSize: 20, fontWeight: 700, color: '#C7621E' }}>스펙잇</div>
           </div>
 

@@ -75,7 +75,7 @@ export default function LandingClient() {
       }}>
         <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontSize: 18, fontWeight: 700, color: '#060b11', display: 'flex', alignItems: 'center', gap: 8 }}>
-            ✨ 스펙잇
+            <img src="/logo.png" alt="스펙잇" style={{ width: 28, height: 28 }} /> 스펙잇
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Link href="/auth/login" style={{ fontSize: 15, color: '#6e6e73', fontWeight: 500 }}>로그인</Link>
