@@ -29,14 +29,7 @@ const STATUS_META: Record<string, { label: string; cls: string }> = {
   rejected: { label: '탈락', cls: 'badge-coral' },
 }
 
-const DEMO: Scholarship[] = [
-  { id: 's1', name: '국가장학금 1유형', org: '한국장학재단', amount: 2250000, semester: '2026-1', type: '반액', status: 'received', memo: '3구간 선정' },
-  { id: 's2', name: '교내 성적우수 장학금', org: '○○대학교', amount: 1500000, semester: '2025-2', type: '일부', status: 'received', memo: '학과 수석' },
-  { id: 's3', name: '삼성꿈장학재단', org: '삼성꿈장학재단', amount: 5000000, semester: '2025-2', type: '전액', status: 'received', memo: '연간 장학금, 2년차' },
-  { id: 's4', name: '국가장학금 2유형', org: '한국장학재단', amount: 1000000, semester: '2025-1', type: '일부', status: 'received', memo: '' },
-  { id: 's5', name: 'KT&G 상상장학재단', org: 'KT&G', amount: 3000000, semester: '2026-1', type: '생활비', status: 'applied', memo: '서류 제출 완료' },
-  { id: 's6', name: '관정이종환장학재단', org: '관정이종환장학재단', amount: 10000000, semester: '2026-1', type: '전액', status: 'rejected', memo: '면접 탈락' },
-]
+const DEMO: Scholarship[] = []
 
 export default function ScholarshipsPage() {
   const { showToast } = useToast()

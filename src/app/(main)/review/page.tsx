@@ -13,12 +13,6 @@ export default function ReviewPage() {
   const [form, setForm] = useState({title:'',org:'',result:'pass',date:'',category:'contest',body:''})
   const userRef = useRef<string | null>(null)
 
-  const DEMO_REVIEWS = [
-    { id: 'd1', title: '삼성 마케팅 공모전', org: '삼성전자', result: 'pass' as const, date: '2026-02-15', category: 'contest', body: '3개월 준비해서 은상 수상. 마케팅 전략 수립 경험이 많이 도움됐음. PPT 디자인도 중요하다는 걸 깨달음.', created_at: '2026-02-15' },
-    { id: 'd2', title: '정보처리기사 필기', org: '한국산업인력공단', result: 'pass' as const, date: '2026-01-20', category: 'cert', body: '2주 벼락치기로 합격. 기출문제 위주로 공부하니 충분했음.', created_at: '2026-01-20' },
-    { id: 'd3', title: 'KOTRA 글로벌 인턴십', org: 'KOTRA', result: 'pending' as const, date: '2026-03-10', category: 'intern', body: '서류 합격 후 면접 대기 중. 무역 실무 경험 기대.', created_at: '2026-03-10' },
-  ]
-
   useEffect(() => { loadReviews() }, [])
 
   const loadReviews = async () => {
@@ -26,7 +20,7 @@ export default function ReviewPage() {
     userRef.current = user?.id ?? null
 
     if (!user) {
-      setReviews(DEMO_REVIEWS as any)
+      setReviews([])
       return
     }
 
@@ -45,7 +39,7 @@ export default function ReviewPage() {
   }
 
   const deleteReview = async (id: string) => {
-    if (id.startsWith('d') && id.length <= 3) { setReviews(p=>p.filter(r=>r.id!==id)); return }
+    if (!userRef.current) { setReviews(p=>p.filter(r=>r.id!==id)); return }
     await supabase.from('reviews').delete().eq('id',id); setReviews(p=>p.filter(r=>r.id!==id))
   }
 
@@ -59,7 +53,7 @@ export default function ReviewPage() {
         return(<div key={r.id} className="rv-card"><div className="flex items-start gap-2.5 mb-2.5"><div className="w-9 h-9 rounded-[9px] bg-[var(--sur2)] flex items-center justify-center text-base flex-shrink-0">{CAT_ICON[r.category]||'📌'}</div><div className="flex-1"><div className="text-[13px] font-semibold">{r.title}</div><div className="text-[11px] text-[var(--tx3)] mt-0.5">{r.org||'기타'}</div></div><div className={`rv-result ${rm.cls}`}>{rm.label}</div></div>{r.body&&<div className="text-xs text-[var(--tx2)] leading-relaxed whitespace-pre-wrap">{r.body}</div>}<div className="flex items-center justify-between mt-2.5 text-[11px] text-[var(--tx3)]"><span>{ds}</span><ShareButton title={r.title} description={r.body||''} /><button onClick={()=>deleteReview(r.id)} className="bg-transparent border-none text-[var(--tx3)] cursor-pointer text-xs p-1 rounded hover:text-[var(--r)]">삭제</button></div></div>)
       }))}
       <Modal open={modalOpen} onClose={()=>setModalOpen(false)} title="✍️ 후기 작성" subtitle="지원 결과와 후기를 기록하세요">
-        <div className="form-group"><label className="form-label">활동명</label><input className="form-input" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="예: 삼성 마케팅 공모전" autoFocus/></div>
+        <div className="form-group"><label className="form-label">활동명</label><input className="form-input" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="예: 마케팅 공모전" autoFocus/></div>
         <div className="form-row"><div className="form-group" style={{flex:1}}><label className="form-label">주관</label><input className="form-input" value={form.org} onChange={e=>setForm({...form,org:e.target.value})} placeholder="주관 기관"/></div><div className="form-group" style={{flex:1}}><label className="form-label">날짜</label><input className="form-input" type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})}/></div></div>
         <div className="form-row"><div className="form-group" style={{flex:1}}><label className="form-label">결과</label><select className="form-input" value={form.result} onChange={e=>setForm({...form,result:e.target.value})}><option value="pass">합격·수상</option><option value="fail">불합격</option><option value="pending">결과대기</option><option value="withdraw">미지원</option></select></div><div className="form-group" style={{flex:1}}><label className="form-label">카테고리</label><select className="form-input" value={form.category} onChange={e=>setForm({...form,category:e.target.value})}><option value="contest">공모전</option><option value="activity">대외활동</option><option value="cert">자격증</option><option value="intern">인턴</option></select></div></div>
         <div className="form-group"><label className="form-label">후기 내용</label><textarea className="form-input" rows={4} value={form.body} onChange={e=>setForm({...form,body:e.target.value})} placeholder="준비 과정, 느낀 점 등"/></div>

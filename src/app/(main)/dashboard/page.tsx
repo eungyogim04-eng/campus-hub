@@ -1,51 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TYPE_LABELS } from '@/types'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import SemesterDday from '@/components/ui/SemesterDday'
+import PromotionBanner from '@/components/ui/PromotionBanner'
 import SpecLevel from '@/components/ui/SpecLevel'
 import { createClient } from '@/lib/supabase/client'
 
-function daysLeft(ds: string | null): number | null {
-  if (!ds) return null
-  const t = new Date(ds)
-  if (isNaN(t.getTime())) return null
-  const n = new Date(); n.setHours(0, 0, 0, 0)
-  return Math.floor((t.getTime() - n.getTime()) / 86400000)
-}
+const TODAY_EVENTS: { title: string; time: string; place: string; tag: string; tagColor: string }[] = []
 
-const DEMO_SCHEDULES = [
-  { id: '1', item_data: { type: 'contest', title: '마케팅 공모전', org: '링커리어', icon: '🏆' }, date: '2026-03-27', dept: '경영·경제' },
-  { id: '2', item_data: { type: 'cert', title: '정보처리기사 필기', org: '한국산업인력공단', icon: '🖥️' }, date: '2026-05-09', dept: '공학·IT' },
-  { id: '3', item_data: { type: 'activity', title: '네이버 부스트캠프', org: '네이버 커넥트재단', icon: '🚀' }, date: '2026-05-15', dept: '공학·IT' },
-]
+const HOT_CONTESTS: { title: string; org: string; date: string; tag: string; dday: number }[] = []
 
-const DEMO_GRADES = [
-  { id: 'dg1', grade: 4.5, credits: 3 },
-  { id: 'dg2', grade: 4.0, credits: 3 },
-  { id: 'dg3', grade: 3.5, credits: 3 },
-  { id: 'dg4', grade: 4.5, credits: 2 },
-  { id: 'dg5', grade: 4.0, credits: 3 },
-]
-
-const TODAY_EVENTS = [
-  { title: '컴퓨터구조론 강의', time: '09:00', place: '공학관 301호', tag: '수업', tagColor: '#2D8A56' },
-  { title: '알고리즘 과제 제출', time: '23:59', place: '온라인 제출', tag: '과제', tagColor: '#E8913A' },
-]
-
-const HOT_CONTESTS = [
-  { title: '2026 대학생 스타트업 아이디어 경진대회', org: '중소벤처기업부', date: '2026-04-15', tag: '창업', dday: 23 },
-  { title: 'UX/UI 디자인 챌린지 2026', org: '카카오 디자인팀', date: '2026-04-08', tag: '디자인', dday: 16 },
-  { title: '전국 대학생 알고리즘 프로그래밍 대회', org: 'POSTECH', date: '2026-04-20', tag: '개발', dday: 28 },
-]
-
-const COMMUNITY_HOT = [
-  { title: '컴공 4학년인데 취업 준비 어떻게 하고 계신가요?', tag: '취업·진로', author: '익명', likes: 87, comments: 34, hot: true },
-  { title: '3월 스터디 같이 하실 분 구해요! (알고리즘 스터디)', tag: '스터디', author: '코딩러버', likes: 45, comments: 18 },
-  { title: '중간고사 대비 시험 범위 정리 공유합니다 (운영체제)', tag: '질문&답변', author: '학습킹', likes: 121, comments: 9 },
-]
+const COMMUNITY_HOT: { title: string; tag: string; author: string; likes: number; comments: number; hot?: boolean }[] = []
 
 /* Mini Calendar */
 function MiniCalendar() {
@@ -90,8 +57,8 @@ function MiniCalendar() {
 export default function DashboardPage() {
   const [todayStr, setTodayStr] = useState('')
   const [userName, setUserName] = useState('사용자')
-  const [scheduleCount, setScheduleCount] = useState(DEMO_SCHEDULES.length)
-  const [avgGpa, setAvgGpa] = useState('3.90')
+  const [scheduleCount, setScheduleCount] = useState(0)
+  const [avgGpa, setAvgGpa] = useState('0.00')
 
   useEffect(() => {
     const d = new Date()
@@ -153,6 +120,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Promotion Banner */}
+      <PromotionBanner />
+
       {/* Semester D-day */}
       <SemesterDday />
 
@@ -167,7 +137,11 @@ export default function DashboardPage() {
             </div>
             <Link href="/schedule" style={{ fontSize: 12, color: '#E8913A', fontWeight: 500 }}>전체 보기 →</Link>
           </div>
-          {TODAY_EVENTS.map((ev, i) => (
+          {TODAY_EVENTS.length === 0 ? (
+            <div style={{ padding: '20px 0', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,.4)' }}>
+              오늘 등록된 일정이 없습니다
+            </div>
+          ) : TODAY_EVENTS.map((ev, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderTop: i > 0 ? '1px solid rgba(255,255,255,.1)' : 'none' }}>
               <div style={{ width: 4, height: 36, borderRadius: 2, background: ev.tagColor }} />
               <div style={{ flex: 1 }}>
@@ -186,10 +160,10 @@ export default function DashboardPage() {
 
       {/* Row 2: Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-        <div className="stat-card"><div className="stat-label">총 장학금</div><div className="stat-val" style={{ color: 'var(--t)' }}>975<span className="text-[13px] font-normal">만원</span></div></div>
+        <div className="stat-card"><div className="stat-label">총 장학금</div><div className="stat-val" style={{ color: 'var(--t)' }}>0<span className="text-[13px] font-normal">만원</span></div></div>
         <div className="stat-card"><div className="stat-label">저장된 일정</div><div className="stat-val">{scheduleCount}</div></div>
         <div className="stat-card"><div className="stat-label">평균 학점</div><div className="stat-val" style={{ color: 'var(--p)' }}>{avgGpa}</div></div>
-        <div className="stat-card"><div className="stat-label">보유 자격증</div><div className="stat-val">6<span className="text-[13px] font-normal">건</span></div></div>
+        <div className="stat-card"><div className="stat-label">보유 자격증</div><div className="stat-val">0<span className="text-[13px] font-normal">건</span></div></div>
       </div>
 
       {/* Row 3: Hot Contests */}
@@ -197,33 +171,41 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700 }}>진행 중인 공모전</div>
-            <div style={{ fontSize: 12, color: 'var(--tx3)' }}>마감 임박 순으로 정렬</div>
+            <div style={{ fontSize: 12, color: 'var(--tx3)' }}>탐색 페이지에서 공모전을 확인하세요</div>
           </div>
           <Link href="/discover" style={{ fontSize: 12, color: 'var(--p)', fontWeight: 500 }}>더 보기 →</Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {HOT_CONTESTS.map((c, i) => (
-            <Link key={i} href="/discover" className="card" style={{ padding: 0, overflow: 'hidden', transition: 'transform .2s, box-shadow .2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,.08)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}
-            >
-              <div style={{ height: 120, background: `linear-gradient(135deg, ${['#E8913A','#2D8A56','#1A5FA0'][i]}, ${['#F0A85C','#5DCAA5','#4090d0'][i]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                <span style={{ fontSize: 40, opacity: 0.4 }}>{['🏆','🎨','💻'][i]}</span>
-                {i < 2 && <span style={{ position: 'absolute', top: 10, left: 10, background: '#E8913A', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>HOT</span>}
-                <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 16, cursor: 'pointer', opacity: 0.7 }}>🔖</span>
-              </div>
-              <div style={{ padding: '14px 16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: 'var(--p)', fontWeight: 600 }}>{c.tag}</span>
-                  <span style={{ fontSize: 11, color: 'var(--c)', fontWeight: 600 }}>D-{c.dday}</span>
+        {HOT_CONTESTS.length === 0 ? (
+          <div className="card" style={{ padding: '32px 16px', textAlign: 'center' }}>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🏆</div>
+            <div style={{ fontSize: 13, color: 'var(--tx3)' }}>탐색 페이지에서 공모전을 둘러보세요</div>
+            <Link href="/discover" style={{ display: 'inline-block', marginTop: 12, fontSize: 13, color: 'var(--p)', fontWeight: 500 }}>공모전 탐색하기 →</Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {HOT_CONTESTS.map((c, i) => (
+              <Link key={i} href="/discover" className="card" style={{ padding: 0, overflow: 'hidden', transition: 'transform .2s, box-shadow .2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,.08)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}
+              >
+                <div style={{ height: 120, background: `linear-gradient(135deg, ${['#E8913A','#2D8A56','#1A5FA0'][i]}, ${['#F0A85C','#5DCAA5','#4090d0'][i]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                  <span style={{ fontSize: 40, opacity: 0.4 }}>{['🏆','🎨','💻'][i]}</span>
+                  {i < 2 && <span style={{ position: 'absolute', top: 10, left: 10, background: '#E8913A', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>HOT</span>}
+                  <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 16, cursor: 'pointer', opacity: 0.7 }}>🔖</span>
                 </div>
-                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4, lineHeight: 1.3 }}>{c.title}</div>
-                <div style={{ fontSize: 11, color: 'var(--tx3)' }}>🏢 {c.org}</div>
-                <div style={{ fontSize: 11, color: 'var(--tx3)', marginTop: 2 }}>📅 {c.date}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
+                <div style={{ padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <span style={{ fontSize: 11, color: 'var(--p)', fontWeight: 600 }}>{c.tag}</span>
+                    <span style={{ fontSize: 11, color: 'var(--c)', fontWeight: 600 }}>D-{c.dday}</span>
+                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4, lineHeight: 1.3 }}>{c.title}</div>
+                  <div style={{ fontSize: 11, color: 'var(--tx3)' }}>🏢 {c.org}</div>
+                  <div style={{ fontSize: 11, color: 'var(--tx3)', marginTop: 2 }}>📅 {c.date}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Row 4: Community Hot */}
@@ -234,30 +216,38 @@ export default function DashboardPage() {
               <span style={{ background: '#E8913A', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, marginRight: 8 }}>HOT</span>
               커뮤니티 인기 글
             </div>
-            <div style={{ fontSize: 12, color: 'var(--tx3)' }}>지금 가장 많이 읽는 게시글</div>
+            <div style={{ fontSize: 12, color: 'var(--tx3)' }}>커뮤니티에서 소통해보세요</div>
           </div>
           <Link href="/community" style={{ fontSize: 12, color: 'var(--p)', fontWeight: 500 }}>더 보기 →</Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {COMMUNITY_HOT.map((post, i) => (
-            <Link key={i} href="/community" className="card" style={{ padding: 16, transition: 'transform .2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none' }}
-            >
-              <div style={{ display: 'flex', gap: 6, marginBottom: 8, alignItems: 'center' }}>
-                <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: 'var(--pl)', color: 'var(--p)', fontWeight: 600 }}>{post.tag}</span>
-                {post.hot && <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#FCEBEB', color: '#E8913A', fontWeight: 600 }}>🔥 HOT</span>}
-              </div>
-              <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const, overflow: 'hidden' }}>{post.title}</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'var(--tx3)' }}>
-                <span>👤 {post.author}</span>
-                <span>·</span>
-                <span>❤️ {post.likes}</span>
-                <span>💬 {post.comments}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {COMMUNITY_HOT.length === 0 ? (
+          <div className="card" style={{ padding: '32px 16px', textAlign: 'center' }}>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>💬</div>
+            <div style={{ fontSize: 13, color: 'var(--tx3)' }}>커뮤니티에 첫 글을 작성해보세요</div>
+            <Link href="/community" style={{ display: 'inline-block', marginTop: 12, fontSize: 13, color: 'var(--p)', fontWeight: 500 }}>커뮤니티 가기 →</Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {COMMUNITY_HOT.map((post, i) => (
+              <Link key={i} href="/community" className="card" style={{ padding: 16, transition: 'transform .2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none' }}
+              >
+                <div style={{ display: 'flex', gap: 6, marginBottom: 8, alignItems: 'center' }}>
+                  <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: 'var(--pl)', color: 'var(--p)', fontWeight: 600 }}>{post.tag}</span>
+                  {post.hot && <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#FCEBEB', color: '#E8913A', fontWeight: 600 }}>🔥 HOT</span>}
+                </div>
+                <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const, overflow: 'hidden' }}>{post.title}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'var(--tx3)' }}>
+                  <span>👤 {post.author}</span>
+                  <span>·</span>
+                  <span>❤️ {post.likes}</span>
+                  <span>💬 {post.comments}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }`}</style>

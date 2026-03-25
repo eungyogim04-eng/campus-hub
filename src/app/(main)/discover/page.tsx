@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
 import Modal from '@/components/ui/Modal'
 import { DATA } from '@/lib/data/items'
+import PromotionBanner from '@/components/ui/PromotionBanner'
 import { DEPARTMENTS, TYPE_LABELS, TYPE_BADGE_CLASSES, DIFF_BADGE_CLASSES, SpecItem } from '@/types'
 
 function daysLeft(ds: string | null): number | null {
@@ -88,6 +89,9 @@ export default function DiscoverPage() {
           <div className="text-[13px] text-[var(--tx3)] mt-0.5">학과 계열 선택 → 항목 클릭 → 일정 추가</div>
         </div>
       </div>
+
+      {/* Promotion Banner */}
+      <PromotionBanner />
 
       {/* Dept Grid */}
       <div className="text-[11px] font-medium text-[var(--tx3)] mb-2 tracking-wider">학과 계열</div>

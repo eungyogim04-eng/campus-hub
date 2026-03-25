@@ -40,19 +40,12 @@ export default function SchedulePage() {
 
   useEffect(() => { loadSchedules() }, [])
 
-  const DEMO_SCHEDULES = [
-    { id: 'd1', item_id: 'demo1', item_data: { type: 'contest', title: 'SW중심대학 해커톤', org: '과학기술정보통신부', icon: '💻', bg: '#EEEDFE', diff: '보통' }, date: '2026-06-15', memo: '팀원 3명 구성 완료', alert_days: 7, dept: '공학·IT', created_at: '' },
-    { id: 'd2', item_id: 'demo2', item_data: { type: 'cert', title: '정보처리기사 필기', org: '한국산업인력공단', icon: '🖥️', bg: '#EEEDFE', diff: '보통' }, date: '2026-05-09', memo: '', alert_days: 7, dept: '공학·IT', created_at: '' },
-    { id: 'd3', item_id: 'demo3', item_data: { type: 'activity', title: '네이버 부스트캠프', org: '네이버 커넥트재단', icon: '🚀', bg: '#EAF3DE', diff: '보통' }, date: '2026-05-15', memo: 'AI 웹 과정', alert_days: 7, dept: '공학·IT', created_at: '' },
-    { id: 'd4', item_id: 'demo4', item_data: { type: 'contest', title: 'CJ 마케팅 챌린지', org: 'CJ제일제당', icon: '🎯', bg: '#FAEEDA', diff: '보통' }, date: '2026-07-15', memo: '', alert_days: 7, dept: '경영·경제', created_at: '' },
-  ]
-
   const loadSchedules = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     userRef.current = user?.id ?? null
 
     if (!user) {
-      setSchedules(DEMO_SCHEDULES as any)
+      setSchedules([])
       return
     }
 
@@ -63,7 +56,7 @@ export default function SchedulePage() {
   }
 
   const removeSchedule = async (id: string) => {
-    if (id.startsWith('d') && id.length <= 3) { setSchedules(prev => prev.filter(s => s.id !== id)); return }
+    if (!userRef.current) { setSchedules(prev => prev.filter(s => s.id !== id)); return }
     await supabase.from('schedules').delete().eq('id', id)
     setSchedules(prev => prev.filter(s => s.id !== id))
   }

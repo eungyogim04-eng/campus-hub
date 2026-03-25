@@ -86,13 +86,6 @@ export default function CommunityPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [form, setForm] = useState({ title: '', body: '', category: 'free', tags: '' })
 
-  const DEMO_POSTS = [
-    { id: 'd1', user_id: 'demo', title: '삼성 마케팅 공모전 팀원 구합니다', body: '경영/디자인 전공 팀원 2명 구합니다. 7월 마감이고 주 1회 온라인 미팅 예정입니다. 관심있으신 분 댓글 남겨주세요!', category: 'team_recruit' as const, tags: ['마케팅', '공모전', '삼성'], like_count: 12, comment_count: 5, created_at: '2026-03-22T10:30:00', updated_at: '', profiles: { name: '김서연', department: '경영학과', avatar_url: null } },
-    { id: 'd2', user_id: 'demo', title: '정보처리기사 필기 2주 합격 후기', body: '기출문제 5년치 + 요약 정리만으로 합격했습니다. 비전공자도 충분히 가능해요. 공부법 공유합니다.', category: 'review_share' as const, tags: ['정보처리기사', '자격증', '합격후기'], like_count: 28, comment_count: 13, created_at: '2026-03-21T14:00:00', updated_at: '', profiles: { name: '이준호', department: '컴퓨터공학과', avatar_url: null } },
-    { id: 'd3', user_id: 'demo', title: '이번 학기 시간표 어떻게 짜셨나요?', body: '3학년 1학기인데 전공 8과목 중 뭘 들어야 할지 모르겠어요. 선배님들 조언 부탁드립니다.', category: 'free' as const, tags: ['시간표', '3학년'], like_count: 7, comment_count: 9, created_at: '2026-03-20T09:15:00', updated_at: '', profiles: { name: '박하은', department: '디자인학과', avatar_url: null } },
-    { id: 'd4', user_id: 'demo', title: '네이버 부스트캠프 같이 준비하실 분!', body: 'AI 웹 과정 지원 예정입니다. 스터디 그룹 만들어서 코테 준비하려는데 관심있으신 분 연락주세요.', category: 'team_recruit' as const, tags: ['부스트캠프', '네이버', '스터디'], like_count: 15, comment_count: 8, created_at: '2026-03-19T16:45:00', updated_at: '', profiles: { name: '최민수', department: '소프트웨어학과', avatar_url: null } },
-  ]
-
   useEffect(() => { loadPosts() }, [filter])
 
   const loadPosts = async () => {
@@ -102,11 +95,7 @@ export default function CommunityPage() {
       .order('created_at', { ascending: false })
     if (filter !== 'all') query = query.eq('category', filter)
     const { data } = await query
-    if (data && data.length > 0) {
-      setPosts(data)
-    } else {
-      setPosts(DEMO_POSTS as any)
-    }
+    setPosts(data || [])
   }
 
   const createPost = async () => {

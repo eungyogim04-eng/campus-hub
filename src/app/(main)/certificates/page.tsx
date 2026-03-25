@@ -24,14 +24,7 @@ const CATEGORY_META: Record<string, { label: string; icon: string; color: string
   other: { label: '기타', icon: '📎', color: '#6e6e73', bg: 'var(--sur2)' },
 }
 
-const DEMO_CERTS: Certificate[] = [
-  { id: 'c1', title: '정보처리기사', issuer: '한국산업인력공단', category: 'cert', issueDate: '2025-11-15', expiryDate: null, credentialId: '25-0012345', imageUrl: null, memo: '필기 92점, 실기 85점으로 합격' },
-  { id: 'c2', title: '네이버 부스트캠프 AI 과정', issuer: '네이버 커넥트재단', category: 'completion', issueDate: '2025-08-30', expiryDate: null, credentialId: 'BC-2025-AI-0421', imageUrl: null, memo: '6개월 과정 수료. 최종 프로젝트 우수상' },
-  { id: 'c3', title: 'TOEIC 900', issuer: 'ETS', category: 'cert', issueDate: '2025-06-20', expiryDate: '2027-06-20', credentialId: '', imageUrl: null, memo: 'LC 470 / RC 430' },
-  { id: 'c4', title: '삼성 마케팅 공모전 대상', issuer: '삼성전자', category: 'award', issueDate: '2025-12-10', expiryDate: null, credentialId: '', imageUrl: null, memo: '팀 4인, 디지털 마케팅 전략 기획 부문' },
-  { id: 'c5', title: 'SQLD', issuer: '한국데이터산업진흥원', category: 'cert', issueDate: '2026-01-20', expiryDate: null, credentialId: 'SQLD-2026-00789', imageUrl: null, memo: '' },
-  { id: 'c6', title: 'Google Analytics 인증', issuer: 'Google', category: 'license', issueDate: '2025-09-05', expiryDate: '2026-09-05', credentialId: 'GA-CERT-2025', imageUrl: null, memo: '온라인 시험 통과' },
-]
+const DEMO_CERTS: Certificate[] = []
 
 function daysUntil(date: string | null): number | null {
   if (!date) return null
@@ -197,12 +190,12 @@ export default function CertificatesPage() {
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="📜 자격증·수료증 추가" subtitle="취득한 자격증이나 수료증 정보를 입력하세요">
         <div className="form-group">
           <label className="form-label">자격증/수료증명 *</label>
-          <input className="form-input" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="예: 정보처리기사, 부스트캠프 수료증" autoFocus />
+          <input className="form-input" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="예: IT 자격증, 수료증" autoFocus />
         </div>
         <div className="form-row">
           <div className="form-group" style={{ flex: 1 }}>
             <label className="form-label">발급기관</label>
-            <input className="form-input" value={form.issuer} onChange={e => setForm({ ...form, issuer: e.target.value })} placeholder="예: 한국산업인력공단" />
+            <input className="form-input" value={form.issuer} onChange={e => setForm({ ...form, issuer: e.target.value })} placeholder="예: 발급 기관명" />
           </div>
           <div className="form-group" style={{ flex: 1 }}>
             <label className="form-label">분류</label>

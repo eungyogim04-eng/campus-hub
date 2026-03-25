@@ -17,14 +17,7 @@ interface Mate {
   matched: boolean
 }
 
-const INITIAL_MATES: Mate[] = [
-  { id: 'm1', name: '이서연', dept: '경영·경제', year: 3, avatar: '🧑‍🎓', status: 'online', bio: '마케팅 공모전 함께 준비할 팀원 찾아요!', interests: ['마케팅', '공모전', '창업'], sharedSpecs: ['삼성 마케팅 공모전', 'CJ 마케팅 챌린지'], matched: true },
-  { id: 'm2', name: '박준혁', dept: '공학·IT', year: 2, avatar: '👨‍💻', status: 'online', bio: '정처기 같이 공부할 스터디원 모집중', interests: ['자격증', '코딩', '알고리즘'], sharedSpecs: ['정보처리기사 필기'], matched: true },
-  { id: 'm3', name: '김하은', dept: '공학·IT', year: 3, avatar: '👩‍💻', status: 'offline', bio: '네이버 부스트캠프 같이 준비해요', interests: ['대외활동', '개발', 'AI'], sharedSpecs: ['네이버 부스트캠프'], matched: true },
-  { id: 'm4', name: '최도윤', dept: '사회·정치', year: 4, avatar: '📚', status: 'online', bio: 'KOTRA 인턴 준비하는 국제학과생', interests: ['인턴', '대외활동', '영어'], sharedSpecs: [], matched: false },
-  { id: 'm5', name: '정유진', dept: '예술·디자인', year: 2, avatar: '🎨', status: 'offline', bio: 'UX/UI 디자인 공모전 팀원 구합니다', interests: ['디자인', '공모전', 'UX'], sharedSpecs: [], matched: false },
-  { id: 'm6', name: '한승우', dept: '경영·경제', year: 3, avatar: '📊', status: 'online', bio: 'SQLD, 데이터분석 자격증 스터디', interests: ['자격증', '데이터', 'SQL'], sharedSpecs: ['SQLD 자격증'], matched: false },
-]
+const INITIAL_MATES: Mate[] = []
 
 const INTEREST_OPTIONS = ['공모전', '자격증', '대외활동', '인턴', '코딩', '마케팅', '디자인', '영어', '데이터', '창업']
 

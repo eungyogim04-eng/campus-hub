@@ -6,6 +6,7 @@ import Modal from '@/components/ui/Modal'
 import { createClient } from '@/lib/supabase/client'
 import { DATA } from '@/lib/data/items'
 import { SpecItem } from '@/types'
+import { Promotion } from '@/lib/data/promotions'
 
 const ADMIN_PASSWORD = 'campus2026'
 
@@ -71,7 +72,7 @@ export default function AdminPage() {
   }
 
   /* ── Tabs ── */
-  const [tab, setTab] = useState<'content' | 'users' | 'notices'>('content')
+  const [tab, setTab] = useState<'content' | 'users' | 'notices' | 'promotions'>('content')
 
   /* ── Content tab state ── */
   const [search, setSearch] = useState('')
@@ -101,6 +102,62 @@ export default function AdminPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>(defaultAnnouncements)
   const [noticeModalOpen, setNoticeModalOpen] = useState(false)
   const [noticeForm, setNoticeForm] = useState({ title: '', content: '', pinned: false })
+
+  /* ── Promotions ── */
+  const [promotions, setPromotions] = useState<Promotion[]>([])
+  const [promoModalOpen, setPromoModalOpen] = useState(false)
+  const [promoForm, setPromoForm] = useState<Omit<Promotion, 'id'>>({
+    type: 'banner',
+    badge: '광고',
+    title: '',
+    description: '',
+    sponsor: '',
+    linkUrl: '',
+    imageUrl: '',
+    category: 'contest',
+    startDate: '',
+    endDate: '',
+    active: true,
+  })
+
+  useEffect(() => {
+    const saved = localStorage.getItem('campus-hub-promotions')
+    if (saved) {
+      try { setPromotions(JSON.parse(saved)) } catch {}
+    }
+  }, [])
+
+  const savePromotions = (list: Promotion[]) => {
+    setPromotions(list)
+    localStorage.setItem('campus-hub-promotions', JSON.stringify(list))
+  }
+
+  const handleAddPromotion = () => {
+    if (!promoForm.title || !promoForm.sponsor) {
+      showToast('제목과 스폰서/기관명을 입력해주세요')
+      return
+    }
+    const newPromo: Promotion = {
+      ...promoForm,
+      id: `promo_${Date.now()}`,
+    }
+    savePromotions([newPromo, ...promotions])
+    setPromoForm({
+      type: 'banner', badge: '광고', title: '', description: '', sponsor: '',
+      linkUrl: '', imageUrl: '', category: 'contest', startDate: '', endDate: '', active: true,
+    })
+    setPromoModalOpen(false)
+    showToast('홍보 콘텐츠가 추가되었습니다')
+  }
+
+  const togglePromoActive = (id: string) => {
+    savePromotions(promotions.map(p => p.id === id ? { ...p, active: !p.active } : p))
+  }
+
+  const deletePromotion = (id: string) => {
+    savePromotions(promotions.filter(p => p.id !== id))
+    showToast('홍보 콘텐츠가 삭제되었습니다')
+  }
 
   /* ── Scrape handler ── */
   const handleScrape = async () => {
@@ -272,6 +329,7 @@ export default function AdminPage() {
           { key: 'content' as const, label: '공모전/자격증/대외활동 관리' },
           { key: 'users' as const, label: '사용자 관리' },
           { key: 'notices' as const, label: '공지사항' },
+          { key: 'promotions' as const, label: '홍보 관리' },
         ]).map(t => (
           <button
             key={t.key}
@@ -465,6 +523,75 @@ export default function AdminPage() {
         </>
       )}
 
+      {/* Tab 4: Promotions management */}
+      {tab === 'promotions' && (
+        <>
+          <div className="card" style={{ padding: 16, marginBottom: 16, background: 'linear-gradient(135deg, #FFF8F0, #FFF3E6)', border: '1px solid rgba(232,145,58,0.2)' }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>홍보 콘텐츠 관리</div>
+            <div style={{ fontSize: 13, color: 'var(--sub)' }}>
+              기업/기관에서 홍보를 의뢰한 콘텐츠를 관리합니다. 홍보 콘텐츠는 &apos;광고&apos; 또는 &apos;제휴&apos; 뱃지가 자동으로 표시됩니다.
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <h3>홍보 콘텐츠 목록 ({promotions.length}개)</h3>
+            <button className="btn" onClick={() => setPromoModalOpen(true)}>+ 홍보 추가</button>
+          </div>
+
+          {promotions.length === 0 ? (
+            <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>📢</div>
+              <div style={{ fontSize: 14, color: 'var(--sub)' }}>등록된 홍보 콘텐츠가 없습니다</div>
+              <div style={{ fontSize: 12, color: 'var(--tx3)', marginTop: 4 }}>위의 &quot;+ 홍보 추가&quot; 버튼으로 새로운 홍보를 등록하세요</div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {promotions.map(p => (
+                <div className="card" key={p.id} style={{ padding: '16px 20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
+                        background: '#E8913A', color: '#fff',
+                      }}>{p.badge}</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 6,
+                        background: p.active ? '#E8FFE8' : '#FFE8E8',
+                        color: p.active ? '#1E7A1E' : '#C0392B',
+                      }}>{p.active ? '활성' : '비활성'}</span>
+                      <strong style={{ fontSize: 14 }}>{p.title}</strong>
+                    </div>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button
+                        className="btn"
+                        style={{ fontSize: 11, padding: '3px 10px' }}
+                        onClick={() => togglePromoActive(p.id)}
+                      >
+                        {p.active ? '비활성화' : '활성화'}
+                      </button>
+                      <button
+                        className="btn"
+                        style={{ fontSize: 11, padding: '3px 10px', background: '#e74c3c', color: '#fff' }}
+                        onClick={() => deletePromotion(p.id)}
+                      >삭제</button>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 13, color: 'var(--sub)', marginBottom: 4 }}>
+                    스폰서: {p.sponsor} · 타입: {p.type === 'banner' ? '배너 광고' : p.type === 'featured' ? '추천 콘텐츠' : '스폰서 게시'}
+                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--tx3)' }}>
+                    링크: <a href={p.linkUrl} target="_blank" rel="noopener noreferrer sponsored" style={{ color: 'var(--p)' }}>{p.linkUrl}</a>
+                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--tx3)', marginTop: 2 }}>
+                    기간: {p.startDate} ~ {p.endDate}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
       {/* Add/Edit item modal */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editingId ? '항목 수정' : '항목 추가'} width="520px">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 16 }}>
@@ -525,6 +652,102 @@ export default function AdminPage() {
           <div className="modal-actions">
             <button className="btn" style={{ background: 'var(--card)', color: 'var(--txt)' }} onClick={() => setModalOpen(false)}>취소</button>
             <button className="btn" onClick={handleSave}>{editingId ? '수정' : '추가'}</button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Add promotion modal */}
+      <Modal open={promoModalOpen} onClose={() => setPromoModalOpen(false)} title="홍보 콘텐츠 추가" width="540px">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div className="form-group">
+              <label className="form-label">타입</label>
+              <select
+                className="form-input"
+                value={promoForm.type}
+                onChange={e => setPromoForm({ ...promoForm, type: e.target.value as Promotion['type'] })}
+              >
+                <option value="banner">배너 광고</option>
+                <option value="featured">추천 콘텐츠</option>
+                <option value="sponsored">스폰서 게시</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">뱃지</label>
+              <select
+                className="form-input"
+                value={promoForm.badge}
+                onChange={e => setPromoForm({ ...promoForm, badge: e.target.value })}
+              >
+                <option value="광고">광고</option>
+                <option value="제휴">제휴</option>
+                <option value="홍보">홍보</option>
+                <option value="스폰서">스폰서</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="form-label">제목</label>
+            <input className="form-input" value={promoForm.title} onChange={e => setPromoForm({ ...promoForm, title: e.target.value })} placeholder="홍보 콘텐츠 제목" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">설명</label>
+            <textarea
+              className="form-input"
+              rows={3}
+              value={promoForm.description}
+              onChange={e => setPromoForm({ ...promoForm, description: e.target.value })}
+              placeholder="홍보 콘텐츠 설명"
+              style={{ resize: 'vertical' }}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">스폰서/기관명</label>
+            <input className="form-input" value={promoForm.sponsor} onChange={e => setPromoForm({ ...promoForm, sponsor: e.target.value })} placeholder="기업 또는 기관 이름" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">링크 URL</label>
+            <input className="form-input" value={promoForm.linkUrl} onChange={e => setPromoForm({ ...promoForm, linkUrl: e.target.value })} placeholder="https://..." />
+          </div>
+          <div className="form-group">
+            <label className="form-label">이미지 URL (선택)</label>
+            <input className="form-input" value={promoForm.imageUrl || ''} onChange={e => setPromoForm({ ...promoForm, imageUrl: e.target.value })} placeholder="https://...image.png (선택사항)" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">카테고리</label>
+            <select
+              className="form-input"
+              value={promoForm.category}
+              onChange={e => setPromoForm({ ...promoForm, category: e.target.value as Promotion['category'] })}
+            >
+              <option value="contest">공모전</option>
+              <option value="cert">자격증</option>
+              <option value="activity">대외활동</option>
+              <option value="general">일반</option>
+            </select>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div className="form-group">
+              <label className="form-label">시작일</label>
+              <input className="form-input" type="date" value={promoForm.startDate} onChange={e => setPromoForm({ ...promoForm, startDate: e.target.value })} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">종료일</label>
+              <input className="form-input" type="date" value={promoForm.endDate} onChange={e => setPromoForm({ ...promoForm, endDate: e.target.value })} />
+            </div>
+          </div>
+          <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="checkbox"
+              id="promo-active-check"
+              checked={promoForm.active}
+              onChange={e => setPromoForm({ ...promoForm, active: e.target.checked })}
+            />
+            <label htmlFor="promo-active-check" className="form-label" style={{ margin: 0 }}>활성화</label>
+          </div>
+          <div className="modal-actions">
+            <button className="btn" style={{ background: 'var(--card)', color: 'var(--txt)' }} onClick={() => setPromoModalOpen(false)}>취소</button>
+            <button className="btn" onClick={handleAddPromotion}>추가</button>
           </div>
         </div>
       </Modal>

@@ -1,17 +1,9 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { SavedSchedule, TYPE_LABELS } from '@/types'
+import { SavedSchedule } from '@/types'
 function daysLeft(ds:string|null):number|null{if(!ds)return null;const t=new Date(ds);if(isNaN(t.getTime()))return null;const n=new Date();n.setHours(0,0,0,0);return Math.floor((t.getTime()-n.getTime())/86400000)}
 
-const DEMO_SPECS = [
-  { id: 'ds1', item_data: { title: '삼성 마케팅 공모전', org: '삼성전자', type: 'contest', icon: '🏢' }, date: '2026-04-15', created_at: '' },
-  { id: 'ds2', item_data: { title: '정보처리기사 필기', org: '한국산업인력공단', type: 'cert', icon: '📋' }, date: '2026-05-09', created_at: '' },
-  { id: 'ds3', item_data: { title: '네이버 부스트캠프', org: '네이버 커넥트재단', type: 'activity', icon: '💚' }, date: '2026-05-15', created_at: '' },
-  { id: 'ds4', item_data: { title: 'CJ 마케팅 챌린지', org: 'CJ그룹', type: 'contest', icon: '🎯' }, date: '2026-06-01', created_at: '' },
-  { id: 'ds5', item_data: { title: 'SQLD 자격증', org: '한국데이터산업진흥원', type: 'cert', icon: '🗄️' }, date: '2026-06-20', created_at: '' },
-  { id: 'ds6', item_data: { title: 'KOTRA 인턴십', org: 'KOTRA', type: 'activity', icon: '🌍' }, date: '2026-07-01', created_at: '' },
-]
 
 export default function SpecPage() {
   const supabase = createClient()
@@ -22,7 +14,7 @@ export default function SpecPage() {
       const { data: { user } } = await supabase.auth.getUser()
 
       if (!user) {
-        setSchedules(DEMO_SPECS as any)
+        setSchedules([])
         return
       }
 
