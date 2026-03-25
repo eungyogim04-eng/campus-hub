@@ -153,11 +153,11 @@ export function IconCommunity() {
 export function IconScholarship() {
   return (
     <svg viewBox="0 0 48 48" fill="none" style={{ width: 48, height: 48 }}>
-      <rect width="48" height="48" rx="14" fill="#E8913A" opacity=".1" />
-      <path d="M24 14l-10 5.5 10 5.5 10-5.5L24 14z" fill="#E8913A" opacity=".8" />
-      <path d="M14 19.5v5c0 2.5 4.5 5 10 5s10-2.5 10-5v-5l-10 5.5-10-5.5z" fill="#E8913A" opacity=".5" />
-      <rect x="31" y="18" width="1.5" height="9" rx=".75" fill="#E8913A" />
-      <circle cx="31.75" cy="28.5" r="1.5" fill="#E8913A" opacity=".6" />
+      <rect width="48" height="48" rx="14" fill="#FB8C00" opacity=".1" />
+      <path d="M24 14l-10 5.5 10 5.5 10-5.5L24 14z" fill="#FB8C00" opacity=".8" />
+      <path d="M14 19.5v5c0 2.5 4.5 5 10 5s10-2.5 10-5v-5l-10 5.5-10-5.5z" fill="#FB8C00" opacity=".5" />
+      <rect x="31" y="18" width="1.5" height="9" rx=".75" fill="#FB8C00" />
+      <circle cx="31.75" cy="28.5" r="1.5" fill="#FB8C00" opacity=".6" />
     </svg>
   )
 }

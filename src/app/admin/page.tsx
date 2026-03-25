@@ -526,7 +526,7 @@ export default function AdminPage() {
       {/* Tab 4: Promotions management */}
       {tab === 'promotions' && (
         <>
-          <div className="card" style={{ padding: 16, marginBottom: 16, background: 'linear-gradient(135deg, #FFF8F0, #FFF3E6)', border: '1px solid rgba(232,145,58,0.2)' }}>
+          <div className="card" style={{ padding: 16, marginBottom: 16, background: 'linear-gradient(135deg, #FFF8F0, #FFF3E0)', border: '1px solid rgba(232,145,58,0.2)' }}>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>홍보 콘텐츠 관리</div>
             <div style={{ fontSize: 13, color: 'var(--sub)' }}>
               기업/기관에서 홍보를 의뢰한 콘텐츠를 관리합니다. 홍보 콘텐츠는 &apos;광고&apos; 또는 &apos;제휴&apos; 뱃지가 자동으로 표시됩니다.
@@ -552,7 +552,7 @@ export default function AdminPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
-                        background: '#E8913A', color: '#fff',
+                        background: '#FB8C00', color: '#fff',
                       }}>{p.badge}</span>
                       <span style={{
                         fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 6,

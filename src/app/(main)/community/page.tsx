@@ -84,7 +84,17 @@ export default function CommunityPage() {
   const [posts, setPosts] = useState<Post[]>([])
   const [filter, setFilter] = useState('all')
   const [modalOpen, setModalOpen] = useState(false)
-  const [form, setForm] = useState({ title: '', body: '', category: 'free', tags: '' })
+  const [form, setForm] = useState({ title: '', body: '', category: 'free' })
+  const [tags, setTags] = useState<string[]>([])
+  const [tagInput, setTagInput] = useState('')
+
+  const addTag = (tag: string) => {
+    const t = tag.trim().replace(/^#/, '')
+    if (t && !tags.includes(t) && tags.length < 10) {
+      setTags([...tags, t])
+    }
+    setTagInput('')
+  }
 
   useEffect(() => { loadPosts() }, [filter])
 
@@ -100,7 +110,11 @@ export default function CommunityPage() {
 
   const createPost = async () => {
     if (!form.title.trim() || !form.body.trim()) { showToast('⚠️ 제목과 내용을 입력해주세요'); return }
-    const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean)
+    const { containsBannedWordFull } = await import('@/lib/wordFilter')
+    const titleCheck = containsBannedWordFull(form.title)
+    const bodyCheck = containsBannedWordFull(form.body)
+    const tagCheck = tags.some(t => containsBannedWordFull(t).found)
+    if (titleCheck.found || bodyCheck.found || tagCheck) { showToast('⚠️ 부적절한 표현이 포함되어 있습니다'); return }
     const insertData: any = {
       title: form.title.trim(), body: form.body.trim(),
       category: form.category, tags,
@@ -108,7 +122,9 @@ export default function CommunityPage() {
     if (user) insertData.user_id = user.id
     await supabase.from('posts').insert(insertData)
     setModalOpen(false)
-    setForm({ title: '', body: '', category: 'free', tags: '' })
+    setForm({ title: '', body: '', category: 'free' })
+    setTags([])
+    setTagInput('')
     loadPosts()
     showToast('📝 게시글이 등록되었습니다!')
   }
@@ -177,7 +193,33 @@ export default function CommunityPage() {
         </div>
         <div className="form-group"><label className="form-label">제목</label><input className="form-input" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="제목을 입력하세요" autoFocus /></div>
         <div className="form-group"><label className="form-label">내용</label><textarea className="form-input" rows={6} value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} placeholder="내용을 입력하세요" /></div>
-        <div className="form-group"><label className="form-label">태그 (쉼표로 구분)</label><input className="form-input" value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} placeholder="마케팅, 공모전, 팀원모집" /></div>
+        <div className="form-group">
+          <label className="form-label">태그</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+            {tags.map(t => (
+              <span key={t} style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                background: '#FFF3E0', color: '#C7621E', fontSize: 12,
+                padding: '3px 10px', borderRadius: 99, fontWeight: 500,
+              }}>
+                #{t}
+                <span onClick={() => setTags(tags.filter(x => x !== t))} style={{ cursor: 'pointer', fontSize: 14, lineHeight: 1 }}>×</span>
+              </span>
+            ))}
+          </div>
+          <input
+            className="form-input"
+            placeholder="태그 입력 후 Enter (예: 마케팅, 디자인)"
+            value={tagInput}
+            onChange={e => setTagInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault()
+                addTag(tagInput)
+              }
+            }}
+          />
+        </div>
         <div className="modal-actions">
           <button className="btn-ghost" onClick={() => setModalOpen(false)}>취소</button>
           <button className="btn" onClick={createPost}>✓ 등록</button>

@@ -76,18 +76,18 @@ export default function SemesterDday() {
       {/* Progress bar with milestones */}
       <div style={{ position: 'relative', width: '100%', height: 8, background: 'var(--bg2, #eee)', borderRadius: 4, marginBottom: 18 }}>
         {/* Fill */}
-        <div style={{ height: '100%', width: `${progress}%`, background: '#E8913A', borderRadius: 4, transition: 'width .6s ease' }} />
+        <div style={{ height: '100%', width: `${progress}%`, background: '#FB8C00', borderRadius: 4, transition: 'width .6s ease' }} />
         {/* Current position marker */}
         <div style={{
           position: 'absolute', top: -3, left: `${progress}%`, transform: 'translateX(-50%)',
-          width: 14, height: 14, borderRadius: '50%', background: '#E8913A', border: '2px solid #fff',
+          width: 14, height: 14, borderRadius: '50%', background: '#FB8C00', border: '2px solid #fff',
           boxShadow: '0 1px 4px rgba(0,0,0,.2)',
         }} />
         {/* Milestone dots */}
         {milestonePositions.map((m, i) => (
           <div key={i} style={{
             position: 'absolute', top: -2, left: `${Math.min(m.pct, 100)}%`, transform: 'translateX(-50%)',
-            width: 12, height: 12, borderRadius: '50%', background: m.pct <= progress ? '#E8913A' : 'var(--bg2, #ddd)',
+            width: 12, height: 12, borderRadius: '50%', background: m.pct <= progress ? '#FB8C00' : 'var(--bg2, #ddd)',
             border: '2px solid #fff', zIndex: 1,
           }}>
             <div style={{
@@ -105,7 +105,7 @@ export default function SemesterDday() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
         {ddayItems.map((item, i) => {
           const urgent = item.days >= 0 && item.days < 14
-          const color = urgent ? '#E8913A' : '#2D8A56'
+          const color = urgent ? '#FB8C00' : '#2D8A56'
           const bg = urgent ? 'rgba(232,145,58,.1)' : 'rgba(45,138,86,.1)'
           const ddayText = item.days > 0 ? `D-${item.days}` : item.days === 0 ? 'D-Day' : `D+${Math.abs(item.days)}`
           return (

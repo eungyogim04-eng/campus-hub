@@ -55,7 +55,7 @@ function Particles({ count = 80 }: { count?: number }) {
       <meshStandardMaterial
         transparent
         opacity={0.6}
-        emissive="#E8913A"
+        emissive="#FB8C00"
         emissiveIntensity={0.4}
       />
     </instancedMesh>
@@ -75,7 +75,7 @@ function GlowOrbs() {
   })
 
   const orbs = [
-    { pos: [-3, 0, -3] as [number, number, number], color: '#E8913A', scale: 0.4 },
+    { pos: [-3, 0, -3] as [number, number, number], color: '#FB8C00', scale: 0.4 },
     { pos: [3, 1, -4] as [number, number, number], color: '#5DCAA5', scale: 0.3 },
     { pos: [0, -1, -5] as [number, number, number], color: '#EF9F27', scale: 0.35 },
     { pos: [-2, 2, -4] as [number, number, number], color: '#F0997B', scale: 0.25 },

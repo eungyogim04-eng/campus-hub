@@ -41,7 +41,7 @@ export default function PromotionBanner() {
             display: 'block',
             padding: '14px 18px',
             borderRadius: 12,
-            background: 'linear-gradient(135deg, #FFF8F0, #FFF3E6)',
+            background: 'linear-gradient(135deg, #FFF8F0, #FFF3E0)',
             border: '1px solid rgba(232,145,58,0.2)',
             marginBottom: 8,
             textDecoration: 'none',
@@ -55,7 +55,7 @@ export default function PromotionBanner() {
               fontWeight: 700,
               padding: '1px 6px',
               borderRadius: 4,
-              background: '#E8913A',
+              background: '#FB8C00',
               color: '#fff',
             }}>{p.badge}</span>
             <div style={{ flex: 1 }}>

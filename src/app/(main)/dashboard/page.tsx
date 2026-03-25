@@ -31,8 +31,8 @@ function MiniCalendar() {
     const hasEvent = eventDays.includes(d)
     cells.push(
       <div key={d} style={{ height: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: isToday ? 700 : 400, color: isToday ? '#fff' : 'var(--txt)', position: 'relative' }}>
-        <div style={{ width: 28, height: 28, borderRadius: '50%', background: isToday ? '#E8913A' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{d}</div>
-        {hasEvent && !isToday && <div style={{ position: 'absolute', bottom: 1, width: 4, height: 4, borderRadius: '50%', background: '#E8913A' }} />}
+        <div style={{ width: 28, height: 28, borderRadius: '50%', background: isToday ? '#FB8C00' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{d}</div>
+        {hasEvent && !isToday && <div style={{ position: 'absolute', bottom: 1, width: 4, height: 4, borderRadius: '50%', background: '#FB8C00' }} />}
       </div>
     )
   }
@@ -47,7 +47,7 @@ function MiniCalendar() {
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', textAlign: 'center', fontSize: 11, color: 'var(--tx3)', marginBottom: 4, gap: 0 }}>
-        {['일','월','화','수','목','금','토'].map(w => <div key={w} style={{ height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', color: w === '일' ? '#E8913A' : w === '토' ? 'var(--b)' : 'var(--tx3)' }}>{w}</div>)}
+        {['일','월','화','수','목','금','토'].map(w => <div key={w} style={{ height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', color: w === '일' ? '#FB8C00' : w === '토' ? 'var(--b)' : 'var(--tx3)' }}>{w}</div>)}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 0 }}>{cells}</div>
     </div>
@@ -135,7 +135,7 @@ export default function DashboardPage() {
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginBottom: 2 }}>오늘 일정</div>
               <div style={{ fontSize: 16, fontWeight: 600 }}>{todayStr}</div>
             </div>
-            <Link href="/schedule" style={{ fontSize: 12, color: '#E8913A', fontWeight: 500 }}>전체 보기 →</Link>
+            <Link href="/schedule" style={{ fontSize: 12, color: '#FB8C00', fontWeight: 500 }}>전체 보기 →</Link>
           </div>
           {TODAY_EVENTS.length === 0 ? (
             <div style={{ padding: '20px 0', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,.4)' }}>
@@ -188,9 +188,9 @@ export default function DashboardPage() {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,.08)' }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}
               >
-                <div style={{ height: 120, background: `linear-gradient(135deg, ${['#E8913A','#2D8A56','#1A5FA0'][i]}, ${['#F0A85C','#5DCAA5','#4090d0'][i]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                <div style={{ height: 120, background: `linear-gradient(135deg, ${['#FB8C00','#2D8A56','#1A5FA0'][i]}, ${['#F0A85C','#5DCAA5','#4090d0'][i]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                   <span style={{ fontSize: 40, opacity: 0.4 }}>{['🏆','🎨','💻'][i]}</span>
-                  {i < 2 && <span style={{ position: 'absolute', top: 10, left: 10, background: '#E8913A', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>HOT</span>}
+                  {i < 2 && <span style={{ position: 'absolute', top: 10, left: 10, background: '#FB8C00', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>HOT</span>}
                   <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 16, cursor: 'pointer', opacity: 0.7 }}>🔖</span>
                 </div>
                 <div style={{ padding: '14px 16px' }}>
@@ -213,7 +213,7 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700 }}>
-              <span style={{ background: '#E8913A', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, marginRight: 8 }}>HOT</span>
+              <span style={{ background: '#FB8C00', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, marginRight: 8 }}>HOT</span>
               커뮤니티 인기 글
             </div>
             <div style={{ fontSize: 12, color: 'var(--tx3)' }}>커뮤니티에서 소통해보세요</div>
@@ -235,7 +235,7 @@ export default function DashboardPage() {
               >
                 <div style={{ display: 'flex', gap: 6, marginBottom: 8, alignItems: 'center' }}>
                   <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: 'var(--pl)', color: 'var(--p)', fontWeight: 600 }}>{post.tag}</span>
-                  {post.hot && <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#FCEBEB', color: '#E8913A', fontWeight: 600 }}>🔥 HOT</span>}
+                  {post.hot && <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#FCEBEB', color: '#FB8C00', fontWeight: 600 }}>🔥 HOT</span>}
                 </div>
                 <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const, overflow: 'hidden' }}>{post.title}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'var(--tx3)' }}>

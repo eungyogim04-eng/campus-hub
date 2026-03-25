@@ -4,7 +4,7 @@ export default function PremiumBadge({ small = false }: { small?: boolean }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 3,
-      background: 'linear-gradient(135deg, #E8913A, #F0A85C)',
+      background: 'linear-gradient(135deg, #FB8C00, #F0A85C)',
       color: '#fff', fontSize: small ? 9 : 10,
       fontWeight: 700, padding: small ? '1px 6px' : '2px 8px',
       borderRadius: 99, letterSpacing: '.03em',

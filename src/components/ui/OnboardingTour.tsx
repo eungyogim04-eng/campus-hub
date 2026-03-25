@@ -69,7 +69,7 @@ export default function OnboardingTour() {
               fontSize: 12, padding: '6px 12px', cursor: 'pointer', color: 'var(--txt, #333)',
             }}>이전</button>}
             <button onClick={next} style={{
-              background: 'var(--p, #E8913A)', color: '#fff', border: 'none',
+              background: 'var(--p, #FB8C00)', color: '#fff', border: 'none',
               borderRadius: 8, fontSize: 12, fontWeight: 600, padding: '6px 14px', cursor: 'pointer',
             }}>{step >= STEPS.length - 1 ? '완료' : '다음'}</button>
           </div>

@@ -20,7 +20,7 @@ function GraduationCap() {
       {/* Cap base (square) */}
       <mesh position={[0, 0.35, 0]} rotation={[0, Math.PI / 4, 0]}>
         <boxGeometry args={[1.6, 0.08, 1.6]} />
-        <meshStandardMaterial color="#E8913A" metalness={0.3} roughness={0.4} />
+        <meshStandardMaterial color="#FB8C00" metalness={0.3} roughness={0.4} />
       </mesh>
 
       {/* Cap dome */}
@@ -97,7 +97,7 @@ function Rocket() {
       {/* Body */}
       <mesh>
         <capsuleGeometry args={[0.2, 0.7, 8, 16]} />
-        <meshStandardMaterial color="#E8913A" metalness={0.3} roughness={0.4} />
+        <meshStandardMaterial color="#FB8C00" metalness={0.3} roughness={0.4} />
       </mesh>
       {/* Nose */}
       <mesh position={[0, 0.65, 0]}>

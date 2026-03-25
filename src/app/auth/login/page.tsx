@@ -47,7 +47,7 @@ export default function LoginPage() {
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: "'Pretendard','Noto Sans KR',sans-serif" }}>
       {/* Left - Branding */}
       <div style={{
-        flex: 1, background: 'linear-gradient(135deg, #E8913A 0%, #F5C882 50%, #FFF3E6 100%)',
+        flex: 1, background: 'linear-gradient(135deg, #FB8C00 0%, #F5C882 50%, #FFF3E0 100%)',
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         padding: 48, position: 'relative', overflow: 'hidden',
       }}
@@ -118,14 +118,14 @@ export default function LoginPage() {
                   fontSize: 14, outline: 'none', background: '#fff', transition: 'border-color .2s',
                   boxSizing: 'border-box',
                 }}
-                onFocus={e => e.target.style.borderColor = '#E8913A'}
+                onFocus={e => e.target.style.borderColor = '#FB8C00'}
                 onBlur={e => e.target.style.borderColor = '#E5E5E5'}
               />
             </div>
             <div style={{ marginBottom: 8 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                 <label style={{ fontSize: 13, fontWeight: 600, color: '#3d3d3d' }}>비밀번호</label>
-                <button type="button" style={{ fontSize: 12, color: '#E8913A', background: 'none', border: 'none', cursor: 'pointer' }}>
+                <button type="button" style={{ fontSize: 12, color: '#FB8C00', background: 'none', border: 'none', cursor: 'pointer' }}>
                   비밀번호 찾기
                 </button>
               </div>
@@ -139,7 +139,7 @@ export default function LoginPage() {
                   fontSize: 14, outline: 'none', background: '#fff', transition: 'border-color .2s',
                   boxSizing: 'border-box',
                 }}
-                onFocus={e => e.target.style.borderColor = '#E8913A'}
+                onFocus={e => e.target.style.borderColor = '#FB8C00'}
                 onBlur={e => e.target.style.borderColor = '#E5E5E5'}
               />
             </div>
@@ -149,11 +149,11 @@ export default function LoginPage() {
               disabled={loading}
               style={{
                 width: '100%', padding: '14px', borderRadius: 12, border: 'none',
-                background: loading ? '#ccc' : '#E8913A', color: '#fff', fontSize: 15, fontWeight: 700,
+                background: loading ? '#ccc' : '#FB8C00', color: '#fff', fontSize: 15, fontWeight: 700,
                 cursor: loading ? 'not-allowed' : 'pointer', marginTop: 20, transition: 'all .2s',
               }}
               onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#D07A2E' }}
-              onMouseLeave={e => { if (!loading) e.currentTarget.style.background = '#E8913A' }}
+              onMouseLeave={e => { if (!loading) e.currentTarget.style.background = '#FB8C00' }}
             >
               {loading ? '로그인 중...' : '로그인'}
             </button>
@@ -195,11 +195,11 @@ export default function LoginPage() {
           <button
             onClick={handleDemo}
             style={{
-              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #E8913A',
+              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #FB8C00',
               background: '#FFF8F0', cursor: 'pointer', fontSize: 14, fontWeight: 600,
-              color: '#E8913A', marginTop: 16, transition: 'all .2s',
+              color: '#FB8C00', marginTop: 16, transition: 'all .2s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E6' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E0' }}
             onMouseLeave={e => { e.currentTarget.style.background = '#FFF8F0' }}
           >
             ✨ 로그인 없이 데모 체험하기
@@ -208,7 +208,7 @@ export default function LoginPage() {
           {/* Footer */}
           <p style={{ textAlign: 'center', fontSize: 13, color: '#8e8e93', marginTop: 24 }}>
             계정이 없으신가요?{' '}
-            <Link href="/auth/signup" style={{ color: '#E8913A', fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/auth/signup" style={{ color: '#FB8C00', fontWeight: 600, textDecoration: 'none' }}>
               회원가입
             </Link>
           </p>

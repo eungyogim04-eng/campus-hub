@@ -95,8 +95,8 @@ export default function Sidebar({ profile, mobileOpen, onClose, scheduleCount = 
                     display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px',
                     borderRadius: 'var(--rads)', cursor: 'pointer', fontSize: 13,
                     color: isActive ? '#C7621E' : 'var(--tx2)',
-                    background: isActive ? '#FFF3E6' : 'transparent',
-                    borderLeft: isActive ? '3px solid #E8913A' : '3px solid transparent',
+                    background: isActive ? '#FFF3E0' : 'transparent',
+                    borderLeft: isActive ? '3px solid #FB8C00' : '3px solid transparent',
                     fontWeight: isActive ? 500 : 400,
                     userSelect: 'none', transition: 'background .12s, border-left .12s',
                   }}
@@ -104,7 +104,7 @@ export default function Sidebar({ profile, mobileOpen, onClose, scheduleCount = 
                   <span style={{ fontSize: 15, width: 20, textAlign: 'center' }}>{item.icon}</span>
                   {item.label}
                   {'badge' in item && item.badge && scheduleCount > 0 && (
-                    <span style={{ marginLeft: 'auto', background: '#E8913A', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 99 }}>
+                    <span style={{ marginLeft: 'auto', background: '#FB8C00', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 99 }}>
                       {scheduleCount}
                     </span>
                   )}

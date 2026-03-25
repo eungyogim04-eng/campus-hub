@@ -154,8 +154,8 @@ export default function SignupPage() {
                 style={{ width: 18, height: 18, accentColor: '#2D8A56' }}
               />
               <span style={{ fontSize: 13, color: '#6e6e73' }}>
-                <Link href="/terms" style={{ color: '#E8913A', textDecoration: 'underline' }}>이용약관</Link> 및{' '}
-                <Link href="/privacy" style={{ color: '#E8913A', textDecoration: 'underline' }}>개인정보처리방침</Link>에 동의합니다
+                <Link href="/terms" style={{ color: '#FB8C00', textDecoration: 'underline' }}>이용약관</Link> 및{' '}
+                <Link href="/privacy" style={{ color: '#FB8C00', textDecoration: 'underline' }}>개인정보처리방침</Link>에 동의합니다
               </span>
             </label>
 
@@ -178,11 +178,11 @@ export default function SignupPage() {
           <button
             onClick={() => router.push('/dashboard')}
             style={{
-              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #E8913A',
+              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #FB8C00',
               background: '#FFF8F0', cursor: 'pointer', fontSize: 14, fontWeight: 600,
-              color: '#E8913A', marginTop: 16, transition: 'all .2s',
+              color: '#FB8C00', marginTop: 16, transition: 'all .2s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E6' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E0' }}
             onMouseLeave={e => { e.currentTarget.style.background = '#FFF8F0' }}
           >
             ✨ 가입 없이 데모 체험하기
@@ -190,7 +190,7 @@ export default function SignupPage() {
 
           <p style={{ textAlign: 'center', fontSize: 13, color: '#8e8e93', marginTop: 24 }}>
             이미 계정이 있으신가요?{' '}
-            <Link href="/auth/login" style={{ color: '#E8913A', fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/auth/login" style={{ color: '#FB8C00', fontWeight: 600, textDecoration: 'none' }}>
               로그인
             </Link>
           </p>

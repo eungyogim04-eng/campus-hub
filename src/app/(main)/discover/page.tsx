@@ -26,6 +26,16 @@ export default function DiscoverPage() {
   const [activeDiffs, setActiveDiffs] = useState<Set<string>>(new Set())
   const [search, setSearch] = useState('')
   const [addedIds, setAddedIds] = useState<Set<string>>(new Set())
+  const [filterTags, setFilterTags] = useState<string[]>([])
+  const [filterTagInput, setFilterTagInput] = useState('')
+
+  const addFilterTag = (tag: string) => {
+    const t = tag.trim().replace(/^#/, '')
+    if (t && !filterTags.includes(t) && filterTags.length < 10) {
+      setFilterTags([...filterTags, t])
+    }
+    setFilterTagInput('')
+  }
   const [modalOpen, setModalOpen] = useState(false)
   const [pendingItem, setPendingItem] = useState<SpecItem | null>(null)
   const [modalDate, setModalDate] = useState('')
@@ -42,9 +52,13 @@ export default function DiscoverPage() {
         const kw = search.toLowerCase()
         if (!it.title.toLowerCase().includes(kw) && !it.desc.toLowerCase().includes(kw) && !it.org.toLowerCase().includes(kw)) return false
       }
+      if (filterTags.length > 0) {
+        const combined = `${it.title} ${it.desc} ${it.org}`.toLowerCase()
+        if (!filterTags.every(tag => combined.includes(tag.toLowerCase()))) return false
+      }
       return true
     })
-  }, [curDept, curType, activeDiffs, search])
+  }, [curDept, curType, activeDiffs, search, filterTags])
 
   const toggleDiff = (diff: string) => {
     setActiveDiffs(prev => {
@@ -148,6 +162,34 @@ export default function DiscoverPage() {
             onChange={e => setSearch(e.target.value)}
           />
         </div>
+      </div>
+
+      {/* Tag Filter */}
+      <div style={{ marginBottom: 14 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+          {filterTags.map(t => (
+            <span key={t} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              background: '#FFF3E0', color: '#C7621E', fontSize: 12,
+              padding: '3px 10px', borderRadius: 99, fontWeight: 500,
+            }}>
+              #{t}
+              <span onClick={() => setFilterTags(filterTags.filter(x => x !== t))} style={{ cursor: 'pointer', fontSize: 14, lineHeight: 1 }}>×</span>
+            </span>
+          ))}
+        </div>
+        <input
+          className="form-input"
+          placeholder="태그로 필터링 (예: #마케팅 #디자인) Enter로 추가"
+          value={filterTagInput}
+          onChange={e => setFilterTagInput(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === ',') {
+              e.preventDefault()
+              addFilterTag(filterTagInput)
+            }
+          }}
+        />
       </div>
 
       {/* Results Meta */}

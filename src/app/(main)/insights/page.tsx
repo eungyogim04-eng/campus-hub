@@ -7,7 +7,7 @@ const SEMESTER_GPAS = [3.45, 3.62, 3.78, 3.90]
 const SEMESTER_LABELS = ['2024-1', '2024-2', '2025-1', '2025-2']
 
 const CATEGORY_DATA = [
-  { label: '국가장학금', pct: 33, color: '#E8913A' },
+  { label: '국가장학금', pct: 33, color: '#FB8C00' },
   { label: '교내장학금', pct: 15, color: '#F0A85C' },
   { label: '재단장학금', pct: 42, color: '#F59E0B' },
   { label: '기타', pct: 10, color: '#10B981' },

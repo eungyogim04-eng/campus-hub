@@ -130,6 +130,8 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   const addComment = async () => {
     if (!commentText.trim()) return
+    const { containsBannedWordFull } = await import('@/lib/wordFilter')
+    if (containsBannedWordFull(commentText).found) { showToast('⚠️ 부적절한 표현이 포함되어 있습니다'); return }
     await supabase.from('comments').insert({ post_id: id, body: commentText.trim() })
     setCommentText('')
     loadComments()

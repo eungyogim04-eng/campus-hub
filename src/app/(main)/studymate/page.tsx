@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/Toast'
 import Modal from '@/components/ui/Modal'
 import { createClient } from '@/lib/supabase/client'
 
-const INTEREST_OPTIONS = ['공모전', '자격증', '대외활동', '인턴', '코딩', '마케팅', '디자인', '영어', '데이터', '창업']
+const SUGGESTED_INTERESTS = ['공모전', '자격증', '대외활동', '코딩', '마케팅', '디자인', '영어', '데이터']
 
 interface MateProfile {
   id: string
@@ -44,6 +44,19 @@ export default function StudyMatePage() {
   const [allProfiles, setAllProfiles] = useState<MateProfile[]>([])
   const [requests, setRequests] = useState<MateRequest[]>([])
   const [saving, setSaving] = useState(false)
+  const [interestInput, setInterestInput] = useState('')
+
+  const addInterest = (tag: string) => {
+    const t = tag.trim().replace(/^#/, '')
+    if (t && !profileForm.interests.includes(t) && profileForm.interests.length < 10) {
+      setProfileForm(prev => ({ ...prev, interests: [...prev.interests, t] }))
+    }
+    setInterestInput('')
+  }
+
+  const removeInterest = (tag: string) => {
+    setProfileForm(prev => ({ ...prev, interests: prev.interests.filter(i => i !== tag) }))
+  }
 
   const fetchData = useCallback(async (currentUserId: string) => {
     const [profileRes, allRes, reqRes] = await Promise.all([
@@ -157,15 +170,6 @@ export default function StudyMatePage() {
     await fetchData(userId)
   }
 
-  const toggleInterest = (interest: string) => {
-    setProfileForm(prev => ({
-      ...prev,
-      interests: prev.interests.includes(interest)
-        ? prev.interests.filter(i => i !== interest)
-        : [...prev.interests, interest],
-    }))
-  }
-
   const openProfileModal = () => {
     if (myProfile) {
       setProfileForm({ bio: myProfile.bio, interests: myProfile.interests })
@@ -239,7 +243,7 @@ export default function StudyMatePage() {
                   <button
                     className="btn"
                     onClick={() => handleRequestAction(req.id, 'accepted')}
-                    style={{ fontSize: 12, background: '#E8913A', color: '#fff', border: 'none' }}
+                    style={{ fontSize: 12, background: '#FB8C00', color: '#fff', border: 'none' }}
                   >
                     수락
                   </button>
@@ -264,7 +268,7 @@ export default function StudyMatePage() {
           onClick={() => setTab('matched')}
           style={{
             fontSize: 13,
-            background: tab === 'matched' ? '#E8913A' : 'var(--sur)',
+            background: tab === 'matched' ? '#FB8C00' : 'var(--sur)',
             color: tab === 'matched' ? '#fff' : 'var(--tx2)',
             border: tab === 'matched' ? 'none' : '1px solid var(--bor)',
           }}
@@ -276,7 +280,7 @@ export default function StudyMatePage() {
           onClick={() => setTab('recommended')}
           style={{
             fontSize: 13,
-            background: tab === 'recommended' ? '#E8913A' : 'var(--sur)',
+            background: tab === 'recommended' ? '#FB8C00' : 'var(--sur)',
             color: tab === 'recommended' ? '#fff' : 'var(--tx2)',
             border: tab === 'recommended' ? 'none' : '1px solid var(--bor)',
           }}
@@ -300,7 +304,7 @@ export default function StudyMatePage() {
             <div style={{ display: 'flex', gap: 14, marginBottom: 12 }}>
               <div style={{
                 width: 48, height: 48, borderRadius: 12,
-                background: '#FFF3E6', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: '#FFF3E0', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 22, fontWeight: 700, color: '#C7621E', flexShrink: 0,
               }}>
                 {mate.profiles?.name?.charAt(0) ?? '?'}
@@ -318,7 +322,7 @@ export default function StudyMatePage() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
               {mate.interests.map(tag => (
                 <span key={tag} style={{
-                  background: '#FFF3E6', color: '#C7621E', fontSize: 11,
+                  background: '#FFF3E0', color: '#C7621E', fontSize: 11,
                   padding: '2px 8px', borderRadius: 99,
                 }}>
                   {tag}
@@ -370,23 +374,44 @@ export default function StudyMatePage() {
         </div>
         <div className="form-group">
           <label className="form-label">관심 분야</label>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 6 }}>
-            {INTEREST_OPTIONS.map(interest => (
-              <label key={interest} style={{
-                display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, cursor: 'pointer',
-                padding: '4px 10px', borderRadius: 99,
-                background: profileForm.interests.includes(interest) ? '#FFF3E6' : 'var(--bg)',
-                color: profileForm.interests.includes(interest) ? '#C7621E' : 'var(--tx2)',
-                border: profileForm.interests.includes(interest) ? '1px solid #E8913A' : '1px solid var(--bor)',
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+            {profileForm.interests.map(t => (
+              <span key={t} style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                background: '#FFF3E0', color: '#C7621E', fontSize: 12,
+                padding: '3px 10px', borderRadius: 99, fontWeight: 500,
               }}>
-                <input
-                  type="checkbox"
-                  checked={profileForm.interests.includes(interest)}
-                  onChange={() => toggleInterest(interest)}
-                  style={{ display: 'none' }}
-                />
-                {interest}
-              </label>
+                #{t}
+                <span onClick={() => removeInterest(t)} style={{ cursor: 'pointer', fontSize: 14, lineHeight: 1 }}>×</span>
+              </span>
+            ))}
+          </div>
+          <input
+            className="form-input"
+            placeholder="관심 분야 입력 후 Enter (예: 마케팅, 디자인)"
+            value={interestInput}
+            onChange={e => setInterestInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault()
+                addInterest(interestInput)
+              }
+            }}
+          />
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+            {SUGGESTED_INTERESTS.filter(s => !profileForm.interests.includes(s)).map(s => (
+              <span
+                key={s}
+                onClick={() => addInterest(s)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  background: 'transparent', color: '#C7621E', fontSize: 12,
+                  padding: '3px 10px', borderRadius: 99, fontWeight: 500,
+                  border: '1px dashed #C7621E', cursor: 'pointer',
+                }}
+              >
+                + {s}
+              </span>
             ))}
           </div>
         </div>

@@ -3,7 +3,7 @@ export default function MainLoading() {
     <div style={{ padding: '40px 0', textAlign: 'center' }}>
       <div style={{
         width: 32, height: 32, border: '3px solid rgba(0,0,0,.06)',
-        borderTopColor: '#E8913A', borderRadius: '50%',
+        borderTopColor: '#FB8C00', borderRadius: '50%',
         animation: 'spin 0.8s linear infinite',
         margin: '0 auto 12px',
       }} />

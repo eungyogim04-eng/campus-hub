@@ -162,7 +162,7 @@ export default function DraggableWidgets({ widgets, storageKey = 'widget-order' 
         }
         .dw-drop-indicator {
           height: 2px;
-          background: var(--p, #E8913A);
+          background: var(--p, #FB8C00);
           border-radius: 1px;
           margin: 2px 0;
         }
