@@ -11,7 +11,6 @@ import PageTransition from '@/components/ui/PageTransition'
 import { Profile } from '@/types'
 import { createClient } from '@/lib/supabase/client'
 
-const KeyboardShortcuts = dynamic(() => import('@/components/ui/KeyboardShortcuts'), { ssr: false })
 const OnboardingTour = dynamic(() => import('@/components/ui/OnboardingTour'), { ssr: false })
 
 const DEMO_PROFILE: Profile = {
@@ -78,7 +77,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <PageTransition>{children}</PageTransition>
         </main>
         {!isDesktop && <MobileNav />}
-        <KeyboardShortcuts />
         <OnboardingTour />
       </div>
     </ToastProvider>
