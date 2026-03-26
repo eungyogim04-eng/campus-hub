@@ -22,7 +22,7 @@ function ReportButton({ targetId, targetType = 'post' }: { targetId: string; tar
 
   useEffect(() => {
     const reports = JSON.parse(localStorage.getItem('campus-hub-reports') || '[]')
-    if (reports.some((r: any) => r.targetId === targetId && r.targetType === targetType)) {
+    if (reports.some((r: { targetId: string; targetType: string }) => r.targetId === targetId && r.targetType === targetType)) {
       setReported(true)
     }
   }, [targetId, targetType])
@@ -118,11 +118,13 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   const toggleLike = async () => {
     if (!user) return
     if (liked) {
-      await supabase.from('likes').delete().eq('post_id', id).eq('user_id', user.id)
+      const { error } = await supabase.from('likes').delete().eq('post_id', id).eq('user_id', user.id)
+      if (error) return
       setLiked(false)
       if (post) setPost({ ...post, like_count: post.like_count - 1 })
     } else {
-      await supabase.from('likes').insert({ post_id: id })
+      const { error } = await supabase.from('likes').insert({ post_id: id })
+      if (error) return
       setLiked(true)
       if (post) setPost({ ...post, like_count: post.like_count + 1 })
     }
@@ -132,7 +134,8 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
     if (!commentText.trim()) return
     const { containsBannedWordFull } = await import('@/lib/wordFilter')
     if (containsBannedWordFull(commentText).found) { showToast('⚠️ 부적절한 표현이 포함되어 있습니다'); return }
-    await supabase.from('comments').insert({ post_id: id, body: commentText.trim() })
+    const { error } = await supabase.from('comments').insert({ post_id: id, body: commentText.trim() })
+    if (error) { showToast('⚠️ 댓글 등록에 실패했습니다'); return }
     setCommentText('')
     loadComments()
     loadPost()
@@ -140,14 +143,16 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   const deleteComment = async (commentId: string) => {
-    await supabase.from('comments').delete().eq('id', commentId)
+    const { error } = await supabase.from('comments').delete().eq('id', commentId)
+    if (error) { showToast('⚠️ 댓글 삭제에 실패했습니다'); return }
     loadComments()
     loadPost()
   }
 
   const deletePost = async () => {
     if (!confirm('게시글을 삭제할까요?')) return
-    await supabase.from('posts').delete().eq('id', id)
+    const { error } = await supabase.from('posts').delete().eq('id', id)
+    if (error) { showToast('⚠️ 게시글 삭제에 실패했습니다'); return }
     router.push('/community')
     showToast('🗑️ 게시글이 삭제되었습니다')
   }

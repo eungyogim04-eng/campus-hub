@@ -57,7 +57,8 @@ export default function SchedulePage() {
 
   const removeSchedule = async (id: string) => {
     if (!userRef.current) { setSchedules(prev => prev.filter(s => s.id !== id)); return }
-    await supabase.from('schedules').delete().eq('id', id)
+    const { error } = await supabase.from('schedules').delete().eq('id', id)
+    if (error) { showToast('⚠️ 일정 삭제에 실패했습니다'); return }
     setSchedules(prev => prev.filter(s => s.id !== id))
   }
 
@@ -77,7 +78,7 @@ export default function SchedulePage() {
       desc: cevMemo || meta.label + ' 일정',
       benefit: '',
     }
-    const insertData: any = {
+    const insertData: Record<string, unknown> = {
       item_id: customItem.id,
       item_data: customItem,
       date: cevDate,
@@ -86,7 +87,8 @@ export default function SchedulePage() {
       dept: meta.label,
     }
     if (userRef.current) insertData.user_id = userRef.current
-    await supabase.from('schedules').insert(insertData)
+    const { error } = await supabase.from('schedules').insert(insertData)
+    if (error) { showToast('⚠️ 일정 추가에 실패했습니다'); return }
     setModalOpen(false)
     setCevTitle(''); setCevOrg(''); setCevMemo('')
     loadSchedules()

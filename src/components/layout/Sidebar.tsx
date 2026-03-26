@@ -120,10 +120,9 @@ export default function Sidebar({ profile, mobileOpen, onClose, scheduleCount = 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 'var(--rads)', cursor: 'pointer' }}>
               <div style={{
                 width: 30, height: 30,
-                background: 'linear-gradient(135deg, #F0A85C, #F5C882)',
+                background: '#F0A85C',
                 borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 12, fontWeight: 600, color: '#7C4A12',
-                boxShadow: '0 1px 3px rgba(232,145,58,0.25)',
               }}>
                 {profile?.name?.[0] || '?'}
               </div>

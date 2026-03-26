@@ -24,7 +24,7 @@ function ReportButton({ targetId, targetType = 'post' }: { targetId: string; tar
 
   useEffect(() => {
     const reports = JSON.parse(localStorage.getItem('campus-hub-reports') || '[]')
-    if (reports.some((r: any) => r.targetId === targetId && r.targetType === targetType)) {
+    if (reports.some((r: { targetId: string; targetType: string }) => r.targetId === targetId && r.targetType === targetType)) {
       setReported(true)
     }
   }, [targetId, targetType])
@@ -115,12 +115,13 @@ export default function CommunityPage() {
     const bodyCheck = containsBannedWordFull(form.body)
     const tagCheck = tags.some(t => containsBannedWordFull(t).found)
     if (titleCheck.found || bodyCheck.found || tagCheck) { showToast('⚠️ 부적절한 표현이 포함되어 있습니다'); return }
-    const insertData: any = {
+    const insertData: Record<string, unknown> = {
       title: form.title.trim(), body: form.body.trim(),
       category: form.category, tags,
     }
     if (user) insertData.user_id = user.id
-    await supabase.from('posts').insert(insertData)
+    const { error } = await supabase.from('posts').insert(insertData)
+    if (error) { showToast('⚠️ 게시글 등록에 실패했습니다'); return }
     setModalOpen(false)
     setForm({ title: '', body: '', category: 'free' })
     setTags([])

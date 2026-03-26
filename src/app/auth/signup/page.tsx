@@ -45,16 +45,13 @@ export default function SignupPage() {
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: "'Pretendard','Noto Sans KR',sans-serif" }}>
       {/* Left - Branding */}
       <div style={{
-        flex: 1, background: 'linear-gradient(135deg, #2D8A56 0%, #5BB67A 50%, #E8F5EC 100%)',
+        flex: 1, background: '#2D8A56',
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         padding: 48, position: 'relative', overflow: 'hidden',
       }}
         className="hidden md:flex"
       >
-        <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.12)' }} />
-        <div style={{ position: 'absolute', bottom: -40, left: -40, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
-
-        <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center' }}>
           <img src="/logo.png" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 24 }} />
           <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>
             대학생활의 시작,<br />스펙잇
@@ -66,7 +63,7 @@ export default function SignupPage() {
 
           <div style={{
             marginTop: 40, background: 'rgba(255,255,255,0.15)', borderRadius: 16,
-            padding: '20px 24px', backdropFilter: 'blur(10px)',
+            padding: '20px 24px',
           }}>
             {['✅ 12개 학과 맞춤 공모전 탐색', '✅ D-day 일정 & 학점 관리', '✅ 스터디 메이트 매칭'].map(t => (
               <div key={t} style={{ fontSize: 14, color: '#fff', padding: '6px 0', textAlign: 'left' }}>{t}</div>

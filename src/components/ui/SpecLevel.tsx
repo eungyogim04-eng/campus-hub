@@ -22,11 +22,11 @@ interface LevelInfo {
 }
 
 const LEVELS: LevelInfo[] = [
-  { level: 1, icon: '🌱', name: '새내기', minXP: 0, maxXP: 99, gradient: 'linear-gradient(135deg, #a8e6cf, #88d8a8)' },
-  { level: 2, icon: '🌿', name: '탐험가', minXP: 100, maxXP: 299, gradient: 'linear-gradient(135deg, #88d8a8, #56ab7b)' },
-  { level: 3, icon: '🌳', name: '도전자', minXP: 300, maxXP: 599, gradient: 'linear-gradient(135deg, #56ab7b, #2D8A56)' },
-  { level: 4, icon: '🔥', name: '실력자', minXP: 600, maxXP: 999, gradient: 'linear-gradient(135deg, #FB8C00, #d47a2a)' },
-  { level: 5, icon: '👑', name: '스펙왕', minXP: 1000, maxXP: Infinity, gradient: 'linear-gradient(135deg, #f6d365, #FB8C00)' },
+  { level: 1, icon: '🌱', name: '새내기', minXP: 0, maxXP: 99, gradient: '#a8e6cf' },
+  { level: 2, icon: '🌿', name: '탐험가', minXP: 100, maxXP: 299, gradient: '#88d8a8' },
+  { level: 3, icon: '🌳', name: '도전자', minXP: 300, maxXP: 599, gradient: '#2D8A56' },
+  { level: 4, icon: '🔥', name: '실력자', minXP: 600, maxXP: 999, gradient: '#FB8C00' },
+  { level: 5, icon: '👑', name: '스펙왕', minXP: 1000, maxXP: Infinity, gradient: '#F5A623' },
 ]
 
 const XP_SOURCES: XPSource[] = [
@@ -97,7 +97,6 @@ export default function SpecLevel({ compact = false }: SpecLevelProps) {
               borderRadius: 12,
               padding: 16,
               minWidth: 240,
-              boxShadow: '0 8px 24px rgba(0,0,0,.12)',
               zIndex: 100,
               color: 'var(--txt)',
               fontWeight: 400,
@@ -190,7 +189,6 @@ export default function SpecLevel({ compact = false }: SpecLevelProps) {
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: 24,
-            boxShadow: '0 4px 12px rgba(0,0,0,.1)',
           }}
         >
           {currentLevel.icon}

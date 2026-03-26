@@ -41,7 +41,7 @@ export default function PromotionBanner() {
             display: 'block',
             padding: '14px 18px',
             borderRadius: 12,
-            background: 'linear-gradient(135deg, #FFF8F0, #FFF3E0)',
+            background: '#FFF8F0',
             border: '1px solid rgba(232,145,58,0.2)',
             marginBottom: 8,
             textDecoration: 'none',

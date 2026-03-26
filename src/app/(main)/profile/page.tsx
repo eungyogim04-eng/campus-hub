@@ -141,14 +141,19 @@ export default function ProfilePage() {
   const [autoSave, setAutoSave] = useState(true)
 
   useEffect(() => {
-    const saved = localStorage.getItem('darkMode')
-    if (saved !== null) setDarkMode(saved === 'true')
+    const saved = localStorage.getItem('campus-hub-theme')
+    if (saved !== null) setDarkMode(saved === 'dark')
   }, [])
 
   const handleDarkModeToggle = () => {
     const next = !darkMode
     setDarkMode(next)
-    localStorage.setItem('darkMode', String(next))
+    localStorage.setItem('campus-hub-theme', next ? 'dark' : 'light')
+    if (next) {
+      document.documentElement.setAttribute('data-theme', 'dark')
+    } else {
+      document.documentElement.removeAttribute('data-theme')
+    }
   }
 
   const handleSaveProfile = async () => {

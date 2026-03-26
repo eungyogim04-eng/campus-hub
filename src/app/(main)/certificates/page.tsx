@@ -159,8 +159,8 @@ export default function CertificatesPage() {
                 background: 'var(--sur)', borderRadius: 'var(--rad)', border: '1px solid var(--bor)',
                 padding: 16, cursor: 'pointer', transition: 'box-shadow .2s, transform .2s',
               }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--pm)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '' }}
               >
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <div style={{ width: 42, height: 42, borderRadius: 10, background: meta.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>

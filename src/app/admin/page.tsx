@@ -58,14 +58,14 @@ export default function AdminPage() {
   const [pwInput, setPwInput] = useState('')
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_auth')
+    const saved = localStorage.getItem('campus-hub-admin-auth')
     if (saved === 'true') setAuthenticated(true)
   }, [])
 
   const handleLogin = () => {
     if (pwInput === ADMIN_PASSWORD) {
       setAuthenticated(true)
-      localStorage.setItem('admin_auth', 'true')
+      localStorage.setItem('campus-hub-admin-auth', 'true')
     } else {
       showToast('비밀번호가 올바르지 않습니다')
     }
@@ -526,7 +526,7 @@ export default function AdminPage() {
       {/* Tab 4: Promotions management */}
       {tab === 'promotions' && (
         <>
-          <div className="card" style={{ padding: 16, marginBottom: 16, background: 'linear-gradient(135deg, #FFF8F0, #FFF3E0)', border: '1px solid rgba(232,145,58,0.2)' }}>
+          <div className="card" style={{ padding: 16, marginBottom: 16, background: '#FFF8F0', border: '1px solid rgba(232,145,58,0.2)' }}>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>홍보 콘텐츠 관리</div>
             <div style={{ fontSize: 13, color: 'var(--sub)' }}>
               기업/기관에서 홍보를 의뢰한 콘텐츠를 관리합니다. 홍보 콘텐츠는 &apos;광고&apos; 또는 &apos;제휴&apos; 뱃지가 자동으로 표시됩니다.

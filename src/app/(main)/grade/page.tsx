@@ -37,7 +37,7 @@ export default function GradePage() {
     userRef.current = user?.id ?? null
 
     if (!user) {
-      setGrades(DEMO_GRADES as any)
+      setGrades(DEMO_GRADES)
       return
     }
 
@@ -49,15 +49,18 @@ export default function GradePage() {
 
   const addGrade = async () => {
     if (!form.subject.trim()) { showToast('⚠️ 과목명을 입력해주세요'); return }
-    const insertData: any = { subject: form.subject.trim(), grade: parseFloat(form.grade), credits: parseInt(form.credits), semester: form.semester, type: form.type }
+    const insertData: Record<string, unknown> = { subject: form.subject.trim(), grade: parseFloat(form.grade), credits: parseInt(form.credits), semester: form.semester, type: form.type }
     if (userRef.current) insertData.user_id = userRef.current
-    await supabase.from('grades').insert(insertData)
+    const { error } = await supabase.from('grades').insert(insertData)
+    if (error) { showToast('⚠️ 성적 추가에 실패했습니다'); return }
     setModalOpen(false); setForm({ subject: '', grade: '4.5', credits: '3', semester: '2026-1', type: '전공필수' }); loadGrades(); showToast(`📝 ${form.subject} 성적 추가!`)
   }
 
   const deleteGrade = async (id: string) => {
     if (id.startsWith('dg')) { setGrades(prev => prev.filter(g => g.id !== id)); return }
-    await supabase.from('grades').delete().eq('id', id); setGrades(prev => prev.filter(g => g.id !== id))
+    const { error } = await supabase.from('grades').delete().eq('id', id)
+    if (error) { showToast('⚠️ 삭제에 실패했습니다'); return }
+    setGrades(prev => prev.filter(g => g.id !== id))
   }
 
   const filtered = semFilter === 'all' ? grades : grades.filter(g => g.semester === semFilter)

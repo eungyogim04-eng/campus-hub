@@ -89,8 +89,8 @@ export default function DashboardPage() {
         // Fetch grades for GPA calculation
         const { data: grades } = await supabase.from('grades').select('grade, credits').eq('user_id', user.id)
         if (grades) {
-          const totalCredits = grades.reduce((s: number, g: any) => s + g.credits, 0)
-          const weightedSum = grades.reduce((s: number, g: any) => s + g.grade * g.credits, 0)
+          const totalCredits = grades.reduce((s: number, g: { grade: number; credits: number }) => s + g.credits, 0)
+          const weightedSum = grades.reduce((s: number, g: { grade: number; credits: number }) => s + g.grade * g.credits, 0)
           if (totalCredits > 0) {
             setAvgGpa((weightedSum / totalCredits).toFixed(2))
           } else {
@@ -185,10 +185,10 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {HOT_CONTESTS.map((c, i) => (
               <Link key={i} href="/discover" className="card" style={{ padding: 0, overflow: 'hidden', transition: 'transform .2s, box-shadow .2s' }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,.08)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--pm)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = '' }}
               >
-                <div style={{ height: 120, background: `linear-gradient(135deg, ${['#FB8C00','#2D8A56','#1A5FA0'][i]}, ${['#F0A85C','#5DCAA5','#4090d0'][i]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                <div style={{ height: 120, background: ['#FB8C00','#2D8A56','#1A5FA0'][i], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                   <span style={{ fontSize: 40, opacity: 0.4 }}>{['🏆','🎨','💻'][i]}</span>
                   {i < 2 && <span style={{ position: 'absolute', top: 10, left: 10, background: '#FB8C00', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>HOT</span>}
                   <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 16, cursor: 'pointer', opacity: 0.7 }}>🔖</span>
@@ -230,8 +230,8 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {COMMUNITY_HOT.map((post, i) => (
               <Link key={i} href="/community" className="card" style={{ padding: 16, transition: 'transform .2s' }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--pm)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = '' }}
               >
                 <div style={{ display: 'flex', gap: 6, marginBottom: 8, alignItems: 'center' }}>
                   <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: 'var(--pl)', color: 'var(--p)', fontWeight: 600 }}>{post.tag}</span>

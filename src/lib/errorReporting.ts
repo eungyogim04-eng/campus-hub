@@ -25,7 +25,7 @@ class ErrorReporter {
         this.captureError(e.error || new Error(e.message), { action: 'window.onerror' })
       })
     }
-    console.log('[ErrorReporter] Initialized', dsn ? 'with DSN' : 'in dev mode')
+    // Initialization complete
   }
 
   captureError(error: Error, context: ErrorContext = {}) {

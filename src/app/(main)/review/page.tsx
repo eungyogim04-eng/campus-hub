@@ -32,15 +32,16 @@ export default function ReviewPage() {
 
   const addReview = async () => {
     if(!form.title.trim()){showToast('⚠️ 활동명을 입력해주세요');return}
-    const insertData: any = {title:form.title.trim(),org:form.org.trim(),result:form.result,date:form.date||null,category:form.category,body:form.body.trim()}
+    const insertData: Record<string, unknown> = {title:form.title.trim(),org:form.org.trim(),result:form.result,date:form.date||null,category:form.category,body:form.body.trim()}
     if (userRef.current) insertData.user_id = userRef.current
-    await supabase.from('reviews').insert(insertData)
+    const { error } = await supabase.from('reviews').insert(insertData)
+    if (error) { showToast('⚠️ 후기 저장에 실패했습니다'); return }
     setModalOpen(false); setForm({title:'',org:'',result:'pass',date:'',category:'contest',body:''}); loadReviews(); showToast('✍️ 후기 저장 완료!')
   }
 
   const deleteReview = async (id: string) => {
     if (!userRef.current) { setReviews(p=>p.filter(r=>r.id!==id)); return }
-    await supabase.from('reviews').delete().eq('id',id); setReviews(p=>p.filter(r=>r.id!==id))
+    const { error } = await supabase.from('reviews').delete().eq('id',id); if (error) { showToast('⚠️ 삭제에 실패했습니다'); return }; setReviews(p=>p.filter(r=>r.id!==id))
   }
 
   const list = filter==='all'?reviews:reviews.filter(r=>r.result===filter); const passCount = reviews.filter(r=>r.result==='pass').length

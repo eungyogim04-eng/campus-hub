@@ -10,7 +10,7 @@ export default function RoadmapPage() {
   const supabase = createClient()
   const [year, setYear] = useState(1)
   const [done, setDone] = useState<Record<string, boolean>>({})
-  useEffect(() => { const load = async () => { const { data } = await supabase.from('roadmap_progress').select('*'); if (data) { const m: Record<string,boolean> = {}; data.forEach((d:any) => m[d.item_id] = d.completed); setDone(m) } }; load() }, [])
+  useEffect(() => { const load = async () => { const { data } = await supabase.from('roadmap_progress').select('*'); if (data) { const m: Record<string,boolean> = {}; data.forEach((d: { item_id: string; completed: boolean }) => m[d.item_id] = d.completed); setDone(m) } }; load() }, [])
   const toggleItem = async (id: string) => { const nv = !done[id]; setDone(p => ({...p,[id]:nv})); if(nv) await supabase.from('roadmap_progress').upsert({item_id:id,completed:true}); else await supabase.from('roadmap_progress').delete().eq('item_id',id) }
   const data = ROADMAP_DATA[year] || []; const all = data.flatMap(s=>s.items); const dc = all.filter(i=>done[i.id]).length; const tot = all.length
   return (

@@ -15,7 +15,7 @@ export default function OnboardingTour() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const done = localStorage.getItem('tour_done')
+    const done = localStorage.getItem('campus-hub-tour-done')
     if (!done) {
       const timer = setTimeout(() => setStep(0), 1500)
       return () => clearTimeout(timer)
@@ -36,7 +36,7 @@ export default function OnboardingTour() {
     }
   }, [step])
 
-  const close = () => { setStep(-1); localStorage.setItem('tour_done', '1') }
+  const close = () => { setStep(-1); localStorage.setItem('campus-hub-tour-done', '1') }
   const next = () => { if (step >= STEPS.length - 1) close(); else setStep(step + 1) }
   const prev = () => { if (step > 0) setStep(step - 1) }
 
@@ -47,7 +47,7 @@ export default function OnboardingTour() {
     <>
       <div onClick={close} style={{
         position: 'fixed', inset: 0, zIndex: 9998,
-        background: 'rgba(0,0,0,.35)', backdropFilter: 'blur(2px)',
+        background: 'rgba(0,0,0,.35)',
       }} />
       <div style={{
         position: 'fixed', top: pos.top, left: pos.left, zIndex: 9999,
