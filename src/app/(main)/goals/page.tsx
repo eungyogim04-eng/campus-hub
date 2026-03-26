@@ -35,6 +35,25 @@ const DEMO_HABITS: Habit[] = [
   { id: 'h4', title: '독서 30분', icon: '📚', streak: 0, todayDone: false },
 ]
 
+// 90일 잔디 데이터 생성 (랜덤 시드 기반)
+function generateGrassData(habitId: string): boolean[] {
+  const days: boolean[] = []
+  let seed = habitId.charCodeAt(1) * 7 + 13
+  for (let i = 0; i < 90; i++) {
+    seed = (seed * 31 + 17) % 100
+    const streakBonus = habitId === 'h1' ? 0.65 : habitId === 'h2' ? 0.55 : habitId === 'h3' ? 0.35 : 0.25
+    days.push(seed / 100 < streakBonus)
+  }
+  return days
+}
+
+const GRASS_DATA: Record<string, boolean[]> = {
+  'h1': generateGrassData('h1'),
+  'h2': generateGrassData('h2'),
+  'h3': generateGrassData('h3'),
+  'h4': generateGrassData('h4'),
+}
+
 const WEEKLY_DATA: Record<string, boolean[]> = {
   'h1': [true, true, true, true, true, false, true],
   'h2': [true, false, true, true, true, true, true],
@@ -293,6 +312,45 @@ export default function GoalsPage() {
             })}
           </div>
         </div>
+      </div>
+
+      {/* 습관 잔디 캘린더 */}
+      <div className="card" style={{ padding: 20, marginTop: 20 }}>
+        <div className="text-base font-semibold" style={{ marginBottom: 4 }}>🌱 습관 달성 캘린더</div>
+        <div style={{ fontSize: 12, color: 'var(--tx3)', marginBottom: 16 }}>최근 90일간 습관 달성 현황</div>
+        {habits.map(habit => {
+          const grass = GRASS_DATA[habit.id] || Array(90).fill(false)
+          const doneCount = grass.filter(Boolean).length
+          const rate = Math.round((doneCount / 90) * 100)
+          return (
+            <div key={habit.id} style={{ marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 16 }}>{habit.icon}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600 }}>{habit.title}</span>
+                </div>
+                <span style={{ fontSize: 12, color: 'var(--tx3)' }}>{doneCount}/90일 ({rate}%)</span>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                {grass.map((done, i) => (
+                  <div key={i} title={`${90 - i}일 전`} style={{
+                    width: 10, height: 10, borderRadius: 2,
+                    background: done ? (
+                      i > 75 ? '#E8913A' : i > 45 ? '#F0A85C' : '#F5C882'
+                    ) : 'var(--sur2)',
+                  }} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6, fontSize: 10, color: 'var(--tx3)' }}>
+                <span>적음</span>
+                {['var(--sur2)', '#F5C882', '#F0A85C', '#E8913A'].map((c, i) => (
+                  <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: c }} />
+                ))}
+                <span>많음</span>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       {/* Add Goal Modal */}

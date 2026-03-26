@@ -1,16 +1,19 @@
 'use client'
 
-const SEMESTER_SCHOLARSHIPS = [0, 1000000, 6500000, 2250000]
-const MONTH_LABELS = ['2024-1', '2024-2', '2025-1', '2025-2']
-
 const SEMESTER_GPAS = [3.45, 3.62, 3.78, 3.90]
 const SEMESTER_LABELS = ['2024-1', '2024-2', '2025-1', '2025-2']
 
-const CATEGORY_DATA = [
-  { label: '국가장학금', pct: 33, color: '#FB8C00' },
-  { label: '교내장학금', pct: 15, color: '#F0A85C' },
-  { label: '재단장학금', pct: 42, color: '#F59E0B' },
-  { label: '기타', pct: 10, color: '#10B981' },
+const HABIT_DATA = [
+  { label: '영어 단어', streak: 12, total: 30, color: '#FB8C00' },
+  { label: '알고리즘', streak: 7, total: 30, color: '#F0A85C' },
+  { label: '운동', streak: 3, total: 30, color: '#F59E0B' },
+  { label: '독서', streak: 0, total: 30, color: '#10B981' },
+]
+
+const GOAL_DATA = [
+  { title: '토익 900점', progress: 75, category: '자격증' },
+  { title: '공모전 2개 수상', progress: 50, category: '공모전' },
+  { title: '학점 4.0 이상', progress: 85, category: '학업' },
 ]
 
 const SPEC_DATA = [
@@ -149,63 +152,54 @@ function LineChart({
 
 /* ── Donut Chart (CSS conic-gradient) ────────────────── */
 
-function DonutChart() {
-  let cumulative = 0
-  const stops = CATEGORY_DATA.map((d) => {
-    const start = cumulative
-    cumulative += d.pct
-    return `${d.color} ${start}% ${cumulative}%`
-  }).join(', ')
-
+function GoalProgressChart() {
   return (
     <div className="card" style={{ padding: 24 }}>
-      <h3 className="card-title" style={{ marginBottom: 16 }}>장학금 유형별 비율</h3>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
-        <div
-          style={{
-            width: 180,
-            height: 180,
-            borderRadius: '50%',
-            background: `conic-gradient(${stops})`,
-            position: 'relative',
-            flexShrink: 0,
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              inset: 40,
-              borderRadius: '50%',
-              background: 'var(--sur)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 13,
-              fontWeight: 600,
-              color: 'var(--tx)',
-            }}
-          >
-            장학금
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {CATEGORY_DATA.map((d) => (
-            <div key={d.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-              <span
-                style={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: 3,
-                  background: d.color,
-                  flexShrink: 0,
-                }}
-              />
-              <span className="stat-label" style={{ minWidth: 36 }}>{d.label}</span>
-              <span className="stat-val" style={{ fontWeight: 600 }}>{d.pct}%</span>
+      <h3 className="card-title" style={{ marginBottom: 16 }}>🎯 목표 달성 현황</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {GOAL_DATA.map((g) => {
+          const catColor: Record<string, string> = { '자격증': '#1A5FA0', '공모전': '#E8913A', '학업': '#2D8A56' }
+          return (
+            <div key={g.title}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: catColor[g.category] || '#888', color: '#fff' }}>{g.category}</span>
+                  <span style={{ fontSize: 13, fontWeight: 500 }}>{g.title}</span>
+                </div>
+                <span style={{ fontSize: 13, fontWeight: 700, color: g.progress >= 80 ? '#2D8A56' : 'var(--p)' }}>{g.progress}%</span>
+              </div>
+              <div style={{ height: 10, borderRadius: 5, background: 'var(--sur2)', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${g.progress}%`, background: catColor[g.category] || 'var(--p)', borderRadius: 5, transition: 'width .4s' }} />
+              </div>
             </div>
-          ))}
-        </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function HabitStreakChart() {
+  return (
+    <div className="card" style={{ padding: 24 }}>
+      <h3 className="card-title" style={{ marginBottom: 16 }}>🔥 습관 연속 기록</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {HABIT_DATA.map((h) => {
+          const pct = (h.streak / h.total) * 100
+          return (
+            <div key={h.label}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12 }}>
+                <span style={{ fontWeight: 500 }}>{h.label}</span>
+                <span style={{ color: h.streak > 0 ? '#E8913A' : 'var(--tx3)', fontWeight: 600 }}>
+                  {h.streak > 0 ? `🔥 ${h.streak}일 연속` : '시작 전'}
+                </span>
+              </div>
+              <div style={{ height: 12, borderRadius: 6, background: 'var(--sur2)', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pct}%`, background: h.color, borderRadius: 6, transition: 'width .4s' }} />
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -280,15 +274,15 @@ function SpecBarChart() {
 /* ── Summary Stat Cards ──────────────────────────────── */
 
 function SummaryCards() {
-  const totalScholarship = SEMESTER_SCHOLARSHIPS.reduce((a, b) => a + b, 0)
   const latestGpa = SEMESTER_GPAS[SEMESTER_GPAS.length - 1]
   const totalSpecs = SPEC_DATA.reduce((a, d) => a + d.done, 0)
-  const inProgressSpecs = SPEC_DATA.reduce((a, d) => a + d.inProgress, 0)
+  const avgGoalProgress = Math.round(GOAL_DATA.reduce((a, g) => a + g.progress, 0) / GOAL_DATA.length)
+  const maxStreak = Math.max(...HABIT_DATA.map(h => h.streak))
 
   const cards = [
-    { label: '총 장학금', value: `${Math.round(totalScholarship / 10000)}만원` },
-    { label: '최근 장학금', value: `${Math.round(SEMESTER_SCHOLARSHIPS[SEMESTER_SCHOLARSHIPS.length - 1] / 10000)}만원` },
     { label: '최근 학점', value: latestGpa.toFixed(2) },
+    { label: '목표 평균 달성률', value: `${avgGoalProgress}%` },
+    { label: '최장 연속 기록', value: `${maxStreak}일` },
     { label: '완료 스펙', value: `${totalSpecs}건` },
   ]
 
@@ -315,21 +309,16 @@ export default function InsightsPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 16, marginTop: 20 }}>
         <LineChart
-          values={SEMESTER_SCHOLARSHIPS}
-          labels={MONTH_LABELS}
-          formatY={(v) => `${Math.round(v / 10000)}만`}
-          title="학기별 장학금 수령"
-        />
-        <LineChart
           values={SEMESTER_GPAS}
           labels={SEMESTER_LABELS}
           formatY={(v) => v.toFixed(2)}
-          title="학기별 학점 변화"
+          title="📈 학기별 학점 변화"
         />
+        <GoalProgressChart />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 16, marginTop: 16 }}>
-        <DonutChart />
+        <HabitStreakChart />
         <SpecBarChart />
       </div>
     </div>
