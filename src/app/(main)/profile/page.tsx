@@ -16,7 +16,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
         height: 24,
         borderRadius: 12,
         cursor: 'pointer',
-        background: on ? '#FB8C00' : 'var(--sur2)',
+        background: on ? '#4A7FC5' : 'var(--sur2)',
         position: 'relative',
         transition: 'background .2s',
         flexShrink: 0,

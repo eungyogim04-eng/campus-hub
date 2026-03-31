@@ -17,7 +17,7 @@ export default function OfflinePage() {
           onClick={() => typeof window !== 'undefined' && window.location.reload()}
           style={{
             fontSize: 15, fontWeight: 600, padding: '12px 32px', borderRadius: 9999,
-            background: '#FB8C00', color: '#fff', border: 'none', cursor: 'pointer',
+            background: '#4A7FC5', color: '#fff', border: 'none', cursor: 'pointer',
           }}
         >
           다시 시도

@@ -81,7 +81,7 @@ export default function SignupPage() {
           {/* Mobile logo */}
           <div className="md:hidden" style={{ textAlign: 'center', marginBottom: 32 }}>
             <img src="/logo.png" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 8 }} />
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#C7621E' }}>스펙잇</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#2E5C8A' }}>스펙잇</div>
           </div>
 
           <h2 style={{ fontSize: 28, fontWeight: 800, color: '#1d1d1f', marginBottom: 4 }}>회원가입</h2>
@@ -151,8 +151,8 @@ export default function SignupPage() {
                 style={{ width: 18, height: 18, accentColor: '#2D8A56' }}
               />
               <span style={{ fontSize: 13, color: '#6e6e73' }}>
-                <Link href="/terms" style={{ color: '#FB8C00', textDecoration: 'underline' }}>이용약관</Link> 및{' '}
-                <Link href="/privacy" style={{ color: '#FB8C00', textDecoration: 'underline' }}>개인정보처리방침</Link>에 동의합니다
+                <Link href="/terms" style={{ color: '#4A7FC5', textDecoration: 'underline' }}>이용약관</Link> 및{' '}
+                <Link href="/privacy" style={{ color: '#4A7FC5', textDecoration: 'underline' }}>개인정보처리방침</Link>에 동의합니다
               </span>
             </label>
 
@@ -175,19 +175,19 @@ export default function SignupPage() {
           <button
             onClick={() => router.push('/dashboard')}
             style={{
-              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #FB8C00',
-              background: '#FFF8F0', cursor: 'pointer', fontSize: 14, fontWeight: 600,
-              color: '#FB8C00', marginTop: 16, transition: 'all .2s',
+              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #4A7FC5',
+              background: '#F0F5FA', cursor: 'pointer', fontSize: 14, fontWeight: 600,
+              color: '#4A7FC5', marginTop: 16, transition: 'all .2s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E0' }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#FFF8F0' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#E8F0FA' }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#F0F5FA' }}
           >
             ✨ 가입 없이 데모 체험하기
           </button>
 
           <p style={{ textAlign: 'center', fontSize: 13, color: '#8e8e93', marginTop: 24 }}>
             이미 계정이 있으신가요?{' '}
-            <Link href="/auth/login" style={{ color: '#FB8C00', fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/auth/login" style={{ color: '#4A7FC5', fontWeight: 600, textDecoration: 'none' }}>
               로그인
             </Link>
           </p>

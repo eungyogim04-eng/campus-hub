@@ -52,6 +52,7 @@ const emptyForm: ItemFormData = {
 
 export default function AdminPage() {
   const { showToast } = useToast()
+  const supabase = createClient()
 
   /* ── Auth gate ── */
   const [authenticated, setAuthenticated] = useState(false)
@@ -217,21 +218,40 @@ export default function AdminPage() {
     setModalOpen(true)
   }
 
-  const handleSave = () => {
-    if (!form.title || !form.org) {
-      showToast('제목과 기관을 입력해주세요')
-      return
-    }
-    if (editingId) {
-      showToast('항목이 수정되었습니다')
-    } else {
-      showToast('항목이 추가되었습니다')
-    }
-    setModalOpen(false)
+  const [dbItems, setDbItems] = useState<any[]>([])
+
+  useEffect(() => { loadItems() }, [])
+  const loadItems = async () => {
+    const { data } = await supabase.from('items').select('*').order('created_at', { ascending: false })
+    if (data) setDbItems(data)
   }
 
-  const handleDelete = (item: SpecItem) => {
-    showToast(`"${item.title}" 삭제 (데모: 하드코딩 데이터)`)
+  const handleSave = async () => {
+    if (!form.title || !form.org) { showToast('제목과 기관을 입력해주세요'); return }
+    const itemData = {
+      type: form.type, title: form.title, org: form.org,
+      description: form.desc, benefit: form.benefit, deadline: form.deadline,
+      icon: form.icon, diff: form.diff, url: form.url, bg: '#EEEDFE',
+    }
+    if (editingId && !editingId.startsWith('static-')) {
+      const { error } = await supabase.from('items').update(itemData).eq('id', editingId)
+      if (error) { showToast('수정 실패: ' + error.message); return }
+      showToast('✅ 항목이 수정되었습니다')
+    } else {
+      const { error } = await supabase.from('items').insert(itemData)
+      if (error) { showToast('추가 실패: ' + error.message); return }
+      showToast('✅ 항목이 추가되어 사이트에 표시됩니다!')
+    }
+    setModalOpen(false)
+    loadItems()
+  }
+
+  const handleDelete = async (item: any) => {
+    if (item._source === 'static') { showToast('기본 데이터는 삭제할 수 없습니다'); return }
+    const { error } = await supabase.from('items').delete().eq('id', item.id)
+    if (error) { showToast('삭제 실패: ' + error.message); return }
+    showToast('✅ 삭제되었습니다')
+    loadItems()
   }
 
   const handleAddNotice = () => {
@@ -435,7 +455,7 @@ export default function AdminPage() {
                         fontWeight: 700,
                         padding: '2px 8px',
                         borderRadius: 6,
-                        background: item.type === 'contest' ? '#FFF0E8' : item.type === 'cert' ? '#E8F0FF' : item.type === 'activity' ? '#E8FFE8' : '#F0E8FF',
+                        background: item.type === 'contest' ? '#E8F0FA' : item.type === 'cert' ? '#E8F0FF' : item.type === 'activity' ? '#E8FFE8' : '#F0E8FF',
                         color: item.type === 'contest' ? '#D4530E' : item.type === 'cert' ? '#2B6CB0' : item.type === 'activity' ? '#1E7A1E' : '#6B21A8',
                       }}>
                         {typeLabel(item.type)}
@@ -526,7 +546,7 @@ export default function AdminPage() {
       {/* Tab 4: Promotions management */}
       {tab === 'promotions' && (
         <>
-          <div className="card" style={{ padding: 16, marginBottom: 16, background: '#FFF8F0', border: '1px solid rgba(232,145,58,0.2)' }}>
+          <div className="card" style={{ padding: 16, marginBottom: 16, background: '#F0F5FA', border: '1px solid rgba(74,127,197,0.2)' }}>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>홍보 콘텐츠 관리</div>
             <div style={{ fontSize: 13, color: 'var(--sub)' }}>
               기업/기관에서 홍보를 의뢰한 콘텐츠를 관리합니다. 홍보 콘텐츠는 &apos;광고&apos; 또는 &apos;제휴&apos; 뱃지가 자동으로 표시됩니다.
@@ -552,7 +572,7 @@ export default function AdminPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
-                        background: '#FB8C00', color: '#fff',
+                        background: '#4A7FC5', color: '#fff',
                       }}>{p.badge}</span>
                       <span style={{
                         fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 6,

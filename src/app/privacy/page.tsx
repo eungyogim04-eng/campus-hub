@@ -206,7 +206,7 @@ export default function PrivacyPage() {
         href="/"
         style={{
           fontSize: 14,
-          color: 'var(--p, #FB8C00)',
+          color: 'var(--p, #4A7FC5)',
           display: 'inline-block',
           marginBottom: 24,
           textDecoration: 'none',
@@ -275,7 +275,7 @@ export default function PrivacyPage() {
           width: 5px;
           height: 5px;
           border-radius: 50%;
-          background: var(--p, #FB8C00);
+          background: var(--p, #4A7FC5);
         }
         .privacy-content ul li strong {
           color: var(--tx, #1d1d1f);
@@ -310,8 +310,8 @@ export default function PrivacyPage() {
           white-space: nowrap;
         }
         .privacy-content .badge.required {
-          background: rgba(232, 145, 58, 0.12);
-          color: #FB8C00;
+          background: rgba(74, 127, 197, 0.12);
+          color: #4A7FC5;
         }
         .privacy-content .badge.optional {
           background: rgba(59, 130, 246, 0.1);
@@ -339,7 +339,7 @@ export default function PrivacyPage() {
           color: var(--tx, #1d1d1f);
         }
         .privacy-content .dpo-info a {
-          color: var(--p, #FB8C00);
+          color: var(--p, #4A7FC5);
           text-decoration: none;
         }
         .privacy-content .dpo-info a:hover {

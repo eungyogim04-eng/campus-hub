@@ -4,8 +4,8 @@ const SEMESTER_GPAS = [3.45, 3.62, 3.78, 3.90]
 const SEMESTER_LABELS = ['2024-1', '2024-2', '2025-1', '2025-2']
 
 const HABIT_DATA = [
-  { label: '영어 단어', streak: 12, total: 30, color: '#FB8C00' },
-  { label: '알고리즘', streak: 7, total: 30, color: '#F0A85C' },
+  { label: '영어 단어', streak: 12, total: 30, color: '#4A7FC5' },
+  { label: '알고리즘', streak: 7, total: 30, color: '#7AB3E0' },
   { label: '운동', streak: 3, total: 30, color: '#F59E0B' },
   { label: '독서', streak: 0, total: 30, color: '#10B981' },
 ]
@@ -158,7 +158,7 @@ function GoalProgressChart() {
       <h3 className="card-title" style={{ marginBottom: 16 }}>🎯 목표 달성 현황</h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {GOAL_DATA.map((g) => {
-          const catColor: Record<string, string> = { '자격증': '#1A5FA0', '공모전': '#E8913A', '학업': '#2D8A56' }
+          const catColor: Record<string, string> = { '자격증': '#1A5FA0', '공모전': '#4A7FC5', '학업': '#2D8A56' }
           return (
             <div key={g.title}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
@@ -190,7 +190,7 @@ function HabitStreakChart() {
             <div key={h.label}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12 }}>
                 <span style={{ fontWeight: 500 }}>{h.label}</span>
-                <span style={{ color: h.streak > 0 ? '#E8913A' : 'var(--tx3)', fontWeight: 600 }}>
+                <span style={{ color: h.streak > 0 ? '#4A7FC5' : 'var(--tx3)', fontWeight: 600 }}>
                   {h.streak > 0 ? `🔥 ${h.streak}일 연속` : '시작 전'}
                 </span>
               </div>

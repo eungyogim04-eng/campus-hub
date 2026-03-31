@@ -307,7 +307,7 @@ export default function ChatPage() {
         <button
           onClick={handleNewChat}
           style={{
-            background: '#FB8C00', color: '#fff', border: 'none', borderRadius: 8,
+            background: '#4A7FC5', color: '#fff', border: 'none', borderRadius: 8,
             padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer',
           }}
         >
@@ -346,7 +346,7 @@ export default function ChatPage() {
               onClick={() => handleSelectRoom(room.id)}
               style={{
                 padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12,
-                background: selectedRoomId === room.id ? '#FFF3E0' : 'transparent',
+                background: selectedRoomId === room.id ? '#E8F0FA' : 'transparent',
                 transition: 'background .12s',
               }}
               onMouseEnter={e => { if (selectedRoomId !== room.id) e.currentTarget.style.background = 'var(--sur2)' }}
@@ -383,7 +383,7 @@ export default function ChatPage() {
                   </span>
                   {isUnread && selectedRoomId !== room.id && (
                     <span style={{
-                      background: '#FB8C00', width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+                      background: '#4A7FC5', width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
                     }} />
                   )}
                 </div>
@@ -460,7 +460,7 @@ export default function ChatPage() {
                 maxWidth: '70%',
                 padding: '10px 14px',
                 borderRadius: isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                background: isMe ? '#FB8C00' : 'var(--sur2)',
+                background: isMe ? '#4A7FC5' : 'var(--sur2)',
                 color: isMe ? '#fff' : 'var(--tx)',
                 fontSize: 14, lineHeight: 1.5, wordBreak: 'break-word',
               }}>
@@ -496,7 +496,7 @@ export default function ChatPage() {
         <button
           onClick={handleSend}
           style={{
-            background: '#FB8C00', color: '#fff', border: 'none',
+            background: '#4A7FC5', color: '#fff', border: 'none',
             borderRadius: '50%', width: 36, height: 36,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', fontSize: 16, flexShrink: 0,

@@ -47,7 +47,7 @@ export default function LoginPage() {
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: "'Pretendard','Noto Sans KR',sans-serif" }}>
       {/* Left - Branding */}
       <div style={{
-        flex: 1, background: '#F5A623',
+        flex: 1, background: '#4A7FC5',
         display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         padding: 48, position: 'relative', overflow: 'hidden',
       }}
@@ -87,7 +87,7 @@ export default function LoginPage() {
           {/* Mobile logo */}
           <div className="md:hidden" style={{ textAlign: 'center', marginBottom: 32 }}>
             <img src="/logo.png" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 8 }} />
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#C7621E' }}>스펙잇</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#2E5C8A' }}>스펙잇</div>
           </div>
 
           <h2 style={{ fontSize: 28, fontWeight: 800, color: '#1d1d1f', marginBottom: 4 }}>로그인</h2>
@@ -115,14 +115,14 @@ export default function LoginPage() {
                   fontSize: 14, outline: 'none', background: '#fff', transition: 'border-color .2s',
                   boxSizing: 'border-box',
                 }}
-                onFocus={e => e.target.style.borderColor = '#FB8C00'}
+                onFocus={e => e.target.style.borderColor = '#4A7FC5'}
                 onBlur={e => e.target.style.borderColor = '#E5E5E5'}
               />
             </div>
             <div style={{ marginBottom: 8 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                 <label style={{ fontSize: 13, fontWeight: 600, color: '#3d3d3d' }}>비밀번호</label>
-                <button type="button" style={{ fontSize: 12, color: '#FB8C00', background: 'none', border: 'none', cursor: 'pointer' }}>
+                <button type="button" style={{ fontSize: 12, color: '#4A7FC5', background: 'none', border: 'none', cursor: 'pointer' }}>
                   비밀번호 찾기
                 </button>
               </div>
@@ -136,7 +136,7 @@ export default function LoginPage() {
                   fontSize: 14, outline: 'none', background: '#fff', transition: 'border-color .2s',
                   boxSizing: 'border-box',
                 }}
-                onFocus={e => e.target.style.borderColor = '#FB8C00'}
+                onFocus={e => e.target.style.borderColor = '#4A7FC5'}
                 onBlur={e => e.target.style.borderColor = '#E5E5E5'}
               />
             </div>
@@ -146,11 +146,11 @@ export default function LoginPage() {
               disabled={loading}
               style={{
                 width: '100%', padding: '14px', borderRadius: 12, border: 'none',
-                background: loading ? '#ccc' : '#FB8C00', color: '#fff', fontSize: 15, fontWeight: 700,
+                background: loading ? '#ccc' : '#4A7FC5', color: '#fff', fontSize: 15, fontWeight: 700,
                 cursor: loading ? 'not-allowed' : 'pointer', marginTop: 20, transition: 'all .2s',
               }}
               onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#D07A2E' }}
-              onMouseLeave={e => { if (!loading) e.currentTarget.style.background = '#FB8C00' }}
+              onMouseLeave={e => { if (!loading) e.currentTarget.style.background = '#4A7FC5' }}
             >
               {loading ? '로그인 중...' : '로그인'}
             </button>
@@ -192,12 +192,12 @@ export default function LoginPage() {
           <button
             onClick={handleDemo}
             style={{
-              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #FB8C00',
-              background: '#FFF8F0', cursor: 'pointer', fontSize: 14, fontWeight: 600,
-              color: '#FB8C00', marginTop: 16, transition: 'all .2s',
+              width: '100%', padding: '13px', borderRadius: 10, border: '1.5px dashed #4A7FC5',
+              background: '#F0F5FA', cursor: 'pointer', fontSize: 14, fontWeight: 600,
+              color: '#4A7FC5', marginTop: 16, transition: 'all .2s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#FFF3E0' }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#FFF8F0' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#E8F0FA' }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#F0F5FA' }}
           >
             ✨ 로그인 없이 데모 체험하기
           </button>
@@ -205,7 +205,7 @@ export default function LoginPage() {
           {/* Footer */}
           <p style={{ textAlign: 'center', fontSize: 13, color: '#8e8e93', marginTop: 24 }}>
             계정이 없으신가요?{' '}
-            <Link href="/auth/signup" style={{ color: '#FB8C00', fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/auth/signup" style={{ color: '#4A7FC5', fontWeight: 600, textDecoration: 'none' }}>
               회원가입
             </Link>
           </p>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
@@ -36,6 +36,26 @@ export default function DiscoverPage() {
     }
     setFilterTagInput('')
   }
+  const [dbItems, setDbItems] = useState<SpecItem[]>([])
+
+  useEffect(() => {
+    if (!curDept) return
+    const fetchDbItems = async () => {
+      const { data } = await supabase.from('items').select('*').eq('dept', curDept)
+      if (data) {
+        setDbItems(data.map((d: any) => ({
+          id: d.id, type: d.type || 'contest',
+          title: d.title || '', org: d.org || '',
+          desc: d.description || '', benefit: d.benefit || '',
+          deadline: d.deadline || '', icon: d.icon || '🏆',
+          bg: d.bg || '#EEEDFE', diff: d.diff || '보통',
+          url: d.url || '',
+        } as SpecItem)))
+      }
+    }
+    fetchDbItems()
+  }, [curDept])
+
   const [modalOpen, setModalOpen] = useState(false)
   const [pendingItem, setPendingItem] = useState<SpecItem | null>(null)
   const [modalDate, setModalDate] = useState('')
@@ -44,7 +64,7 @@ export default function DiscoverPage() {
 
   const items = useMemo(() => {
     if (!curDept) return []
-    const pool = DATA[curDept] || []
+    const pool = [...dbItems, ...(DATA[curDept] || [])]
     return pool.filter(it => {
       if (curType !== 'all' && it.type !== curType) return false
       if (activeDiffs.size > 0 && !activeDiffs.has(it.diff)) return false
@@ -58,7 +78,7 @@ export default function DiscoverPage() {
       }
       return true
     })
-  }, [curDept, curType, activeDiffs, search, filterTags])
+  }, [curDept, curType, activeDiffs, search, filterTags, dbItems])
 
   const toggleDiff = (diff: string) => {
     setActiveDiffs(prev => {
@@ -170,7 +190,7 @@ export default function DiscoverPage() {
           {filterTags.map(t => (
             <span key={t} style={{
               display: 'inline-flex', alignItems: 'center', gap: 4,
-              background: '#FFF3E0', color: '#C7621E', fontSize: 12,
+              background: '#E8F0FA', color: '#2E5C8A', fontSize: 12,
               padding: '3px 10px', borderRadius: 99, fontWeight: 500,
             }}>
               #{t}

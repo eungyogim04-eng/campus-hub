@@ -15,7 +15,7 @@ interface TimetableClass {
 }
 
 const DEMO_CLASSES: TimetableClass[] = [
-  { id: 't1', name: '컴퓨터구조론', professor: '김교수', room: '공학관 301', day: 1, startHour: 9, endHour: 11, color: '#FB8C00' },
+  { id: 't1', name: '컴퓨터구조론', professor: '김교수', room: '공학관 301', day: 1, startHour: 9, endHour: 11, color: '#4A7FC5' },
   { id: 't2', name: '알고리즘', professor: '이교수', room: '공학관 205', day: 3, startHour: 13, endHour: 15, color: '#2D8A56' },
   { id: 't3', name: '데이터베이스', professor: '박교수', room: '공학관 102', day: 2, startHour: 10, endHour: 12, color: '#1A5FA0' },
   { id: 't4', name: '영어회화', professor: '원어민교수', room: '인문관 401', day: 4, startHour: 14, endHour: 16, color: '#993C1D' },
@@ -24,7 +24,7 @@ const DEMO_CLASSES: TimetableClass[] = [
 
 const DAYS = ['월', '화', '수', '목', '금']
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 9)
-const COLOR_OPTIONS = ['#FB8C00', '#2D8A56', '#1A5FA0', '#993C1D', '#7B3EA0', '#C73E6B']
+const COLOR_OPTIONS = ['#4A7FC5', '#2D8A56', '#1A5FA0', '#993C1D', '#7B3EA0', '#C73E6B']
 
 export default function TimetablePage() {
   const { showToast } = useToast()

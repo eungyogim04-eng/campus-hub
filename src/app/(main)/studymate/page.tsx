@@ -243,7 +243,7 @@ export default function StudyMatePage() {
                   <button
                     className="btn"
                     onClick={() => handleRequestAction(req.id, 'accepted')}
-                    style={{ fontSize: 12, background: '#FB8C00', color: '#fff', border: 'none' }}
+                    style={{ fontSize: 12, background: '#4A7FC5', color: '#fff', border: 'none' }}
                   >
                     수락
                   </button>
@@ -268,7 +268,7 @@ export default function StudyMatePage() {
           onClick={() => setTab('matched')}
           style={{
             fontSize: 13,
-            background: tab === 'matched' ? '#FB8C00' : 'var(--sur)',
+            background: tab === 'matched' ? '#4A7FC5' : 'var(--sur)',
             color: tab === 'matched' ? '#fff' : 'var(--tx2)',
             border: tab === 'matched' ? 'none' : '1px solid var(--bor)',
           }}
@@ -280,7 +280,7 @@ export default function StudyMatePage() {
           onClick={() => setTab('recommended')}
           style={{
             fontSize: 13,
-            background: tab === 'recommended' ? '#FB8C00' : 'var(--sur)',
+            background: tab === 'recommended' ? '#4A7FC5' : 'var(--sur)',
             color: tab === 'recommended' ? '#fff' : 'var(--tx2)',
             border: tab === 'recommended' ? 'none' : '1px solid var(--bor)',
           }}
@@ -304,8 +304,8 @@ export default function StudyMatePage() {
             <div style={{ display: 'flex', gap: 14, marginBottom: 12 }}>
               <div style={{
                 width: 48, height: 48, borderRadius: 12,
-                background: '#FFF3E0', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 22, fontWeight: 700, color: '#C7621E', flexShrink: 0,
+                background: '#E8F0FA', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 22, fontWeight: 700, color: '#2E5C8A', flexShrink: 0,
               }}>
                 {mate.profiles?.name?.charAt(0) ?? '?'}
               </div>
@@ -322,7 +322,7 @@ export default function StudyMatePage() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
               {mate.interests.map(tag => (
                 <span key={tag} style={{
-                  background: '#FFF3E0', color: '#C7621E', fontSize: 11,
+                  background: '#E8F0FA', color: '#2E5C8A', fontSize: 11,
                   padding: '2px 8px', borderRadius: 99,
                 }}>
                   {tag}
@@ -378,7 +378,7 @@ export default function StudyMatePage() {
             {profileForm.interests.map(t => (
               <span key={t} style={{
                 display: 'inline-flex', alignItems: 'center', gap: 4,
-                background: '#FFF3E0', color: '#C7621E', fontSize: 12,
+                background: '#E8F0FA', color: '#2E5C8A', fontSize: 12,
                 padding: '3px 10px', borderRadius: 99, fontWeight: 500,
               }}>
                 #{t}
@@ -405,9 +405,9 @@ export default function StudyMatePage() {
                 onClick={() => addInterest(s)}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 4,
-                  background: 'transparent', color: '#C7621E', fontSize: 12,
+                  background: 'transparent', color: '#2E5C8A', fontSize: 12,
                   padding: '3px 10px', borderRadius: 99, fontWeight: 500,
-                  border: '1px dashed #C7621E', cursor: 'pointer',
+                  border: '1px dashed #2E5C8A', cursor: 'pointer',
                 }}
               >
                 + {s}

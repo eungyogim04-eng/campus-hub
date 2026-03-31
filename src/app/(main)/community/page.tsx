@@ -200,7 +200,7 @@ export default function CommunityPage() {
             {tags.map(t => (
               <span key={t} style={{
                 display: 'inline-flex', alignItems: 'center', gap: 4,
-                background: '#FFF3E0', color: '#C7621E', fontSize: 12,
+                background: '#E8F0FA', color: '#2E5C8A', fontSize: 12,
                 padding: '3px 10px', borderRadius: 99, fontWeight: 500,
               }}>
                 #{t}

@@ -63,7 +63,7 @@ const WEEKLY_DATA: Record<string, boolean[]> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   '자격증': '#1A5FA0',
-  '공모전': '#FB8C00',
+  '공모전': '#4A7FC5',
   '학업': '#2D8A56',
   '기타': '#7B3EA0',
 }
@@ -90,7 +90,7 @@ function CircularProgress({ progress, size = 60 }: { progress: number; size?: nu
   return (
     <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
       <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--sur2)" strokeWidth={strokeWidth} />
-      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#FB8C00" strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.3s' }} />
+      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#4A7FC5" strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.3s' }} />
       <text x={size / 2} y={size / 2} textAnchor="middle" dominantBaseline="central" style={{ fontSize: 13, fontWeight: 600, fill: 'var(--tx)', transform: 'rotate(90deg)', transformOrigin: 'center' }}>{progress}%</text>
     </svg>
   )
@@ -224,7 +224,7 @@ export default function GoalsPage() {
                       <span style={{ fontSize: 15, fontWeight: 600 }}>{goal.title}</span>
                     </div>
                     <div style={{ fontSize: 12, color: 'var(--tx3)', marginBottom: 10 }}>
-                      마감: {goal.deadline} <span style={{ fontWeight: 600, color: '#FB8C00', marginLeft: 6 }}>{getDday(goal.deadline)}</span>
+                      마감: {goal.deadline} <span style={{ fontWeight: 600, color: '#4A7FC5', marginLeft: 6 }}>{getDday(goal.deadline)}</span>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                       {goal.milestones.map((ms, idx) => {
@@ -235,7 +235,7 @@ export default function GoalsPage() {
                               type="checkbox"
                               checked={done}
                               onChange={() => toggleMilestone(goal.id, idx)}
-                              style={{ accentColor: '#FB8C00' }}
+                              style={{ accentColor: '#4A7FC5' }}
                             />
                             <span style={{ textDecoration: done ? 'line-through' : 'none', color: done ? 'var(--tx3)' : 'var(--tx)' }}>{ms}</span>
                           </label>
@@ -267,7 +267,7 @@ export default function GoalsPage() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span style={{ fontSize: 14, fontWeight: 600 }}>{habit.title}</span>
                         {habit.streak > 0 && (
-                          <span style={{ background: '#FFF3E0', color: '#C7621E', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 99 }}>
+                          <span style={{ background: '#E8F0FA', color: '#2E5C8A', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 99 }}>
                             🔥 {habit.streak}일
                           </span>
                         )}
@@ -279,7 +279,7 @@ export default function GoalsPage() {
                               width: 14,
                               height: 14,
                               borderRadius: 3,
-                              background: done ? '#FB8C00' : 'var(--sur2)',
+                              background: done ? '#4A7FC5' : 'var(--sur2)',
                               transition: 'background 0.2s',
                             }} />
                             <span style={{ fontSize: 9, color: 'var(--tx3)' }}>{DAY_LABELS[i]}</span>
@@ -336,14 +336,14 @@ export default function GoalsPage() {
                   <div key={i} title={`${90 - i}일 전`} style={{
                     width: 10, height: 10, borderRadius: 2,
                     background: done ? (
-                      i > 75 ? '#E8913A' : i > 45 ? '#F0A85C' : '#F5C882'
+                      i > 75 ? '#4A7FC5' : i > 45 ? '#7AB3E0' : '#A8CCE8'
                     ) : 'var(--sur2)',
                   }} />
                 ))}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6, fontSize: 10, color: 'var(--tx3)' }}>
                 <span>적음</span>
-                {['var(--sur2)', '#F5C882', '#F0A85C', '#E8913A'].map((c, i) => (
+                {['var(--sur2)', '#A8CCE8', '#7AB3E0', '#4A7FC5'].map((c, i) => (
                   <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: c }} />
                 ))}
                 <span>많음</span>
