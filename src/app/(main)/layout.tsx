@@ -76,7 +76,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <GlobalSearch />
           <PageTransition>{children}</PageTransition>
         </main>
-        {!isDesktop && <MobileNav />}
+        {/* MobileNav removed */}
         <OnboardingTour />
       </div>
     </ToastProvider>
