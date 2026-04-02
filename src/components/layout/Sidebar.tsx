@@ -16,7 +16,6 @@ const NAV_ITEMS = [
       { path: '/discover', icon: '🔍', label: '공모전', tour: 'nav-discover' },
       { path: '/timetable', icon: '🕐', label: '시간표', tour: '' },
       { path: '/grade', icon: '📝', label: '학점관리', tour: '' },
-      { path: '/goals', icon: '🎯', label: '목표·습관', tour: '' },
     ],
   },
   {
@@ -26,7 +25,6 @@ const NAV_ITEMS = [
       { path: '/community', icon: '💬', label: '커뮤니티', tour: 'nav-community' },
       { path: '/studymate', icon: '🤝', label: '스터디메이트', tour: '' },
       { path: '/chat', icon: '✉️', label: '채팅', tour: '' },
-      { path: '/roadmap', icon: '🗺️', label: '로드맵', tour: '' },
       { path: '/insights', icon: '📊', label: '인사이트', tour: '' },
     ],
   },
