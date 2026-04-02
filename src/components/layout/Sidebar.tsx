@@ -67,7 +67,7 @@ export default function Sidebar({ profile, mobileOpen, onClose, scheduleCount = 
         transform: visible ? 'translateX(0)' : 'translateX(-100%)',
       }}>
         <div className="px-5 pb-6 text-base font-semibold flex items-center gap-2" style={{ color: '#C7621E' }}>
-          <img src="/logo.png" alt="스펙잇" style={{ width: 32, height: 32 }} />
+          <img src="/logo.svg" alt="스펙잇" style={{ width: 32, height: 32 }} />
           스펙잇
         </div>
 

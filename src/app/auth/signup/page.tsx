@@ -52,7 +52,7 @@ export default function SignupPage() {
         className="hidden md:flex"
       >
         <div style={{ textAlign: 'center' }}>
-          <img src="/logo.png" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 24 }} />
+          <img src="/logo.svg" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 24 }} />
           <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>
             대학생활의 시작,<br />스펙잇
           </h1>
@@ -80,7 +80,7 @@ export default function SignupPage() {
         <div style={{ width: '100%', maxWidth: 400 }}>
           {/* Mobile logo */}
           <div className="md:hidden" style={{ textAlign: 'center', marginBottom: 32 }}>
-            <img src="/logo.png" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 8 }} />
+            <img src="/logo.svg" alt="스펙잇" style={{ width: 48, height: 48, marginBottom: 8 }} />
             <div style={{ fontSize: 20, fontWeight: 700, color: '#2E5C8A' }}>스펙잇</div>
           </div>
 

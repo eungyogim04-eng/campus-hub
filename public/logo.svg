@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="56" fill="#4A7FC5"/>
+
+  <!-- Stylized S shape -->
+  <path d="M72 38C72 38 65 32 54 32C43 32 36 39 36 47C36 55 43 58 54 61C65 64 72 67 72 75C72 83 65 90 54 90C43 90 36 84 36 84"
+    stroke="white" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+  <!-- Checkmark on top right -->
+  <circle cx="88" cy="28" r="16" fill="#2D8A56"/>
+  <path d="M81 28L86 33L96 23" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
