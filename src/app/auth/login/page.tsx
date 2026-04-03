@@ -30,12 +30,17 @@ export default function LoginPage() {
 
   const handleOAuth = async (provider: 'google' | 'kakao') => {
     try {
-      await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: { redirectTo: `${window.location.origin}/auth/callback` },
       })
-    } catch {
-      setError('소셜 로그인은 Supabase 연결 후 사용 가능합니다.')
+      if (error) {
+        setError(`${provider} 로그인 오류: ${error.message}`)
+      } else if (data?.url) {
+        window.location.href = data.url
+      }
+    } catch (e: unknown) {
+      setError(`소셜 로그인 실패: ${e instanceof Error ? e.message : '알 수 없는 오류'}`)
     }
   }
 
