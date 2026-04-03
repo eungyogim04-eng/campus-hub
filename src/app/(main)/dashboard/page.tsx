@@ -5,7 +5,6 @@ import Link from 'next/link'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import SemesterDday from '@/components/ui/SemesterDday'
 import PromotionBanner from '@/components/ui/PromotionBanner'
-import SpecLevel from '@/components/ui/SpecLevel'
 import { createClient } from '@/lib/supabase/client'
 
 const TODAY_EVENTS: { title: string; time: string; place: string; tag: string; tagColor: string }[] = []
@@ -110,7 +109,6 @@ export default function DashboardPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             <div style={{ fontSize: 20, fontWeight: 700 }}>안녕하세요, {userName}님 👋</div>
-            <SpecLevel compact />
           </div>
           <div style={{ fontSize: 13, color: 'var(--tx3)', marginTop: 2 }}>오늘도 알찬 하루 보내세요!</div>
         </div>

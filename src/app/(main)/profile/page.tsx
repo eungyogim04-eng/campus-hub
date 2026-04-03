@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/Toast'
-import SpecLevel from '@/components/ui/SpecLevel'
 import { createClient } from '@/lib/supabase/client'
 
 function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
@@ -280,9 +279,6 @@ export default function ProfilePage() {
 
         {/* Right Column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {/* Spec Level */}
-          <SpecLevel />
-
           {/* Account Info */}
           <div className="card" style={{ padding: 20 }}>
             <div className="text-[15px] font-semibold mb-3" style={{ color: 'var(--txt)' }}>
